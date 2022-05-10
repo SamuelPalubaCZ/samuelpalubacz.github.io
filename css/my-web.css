@@ -1,0 +1,96 @@
+body {
+  line-height: 36px;
+  width: 100%;
+  font-family: 'Source Sans Pro VF', sans-serif;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-weight: 400;
+  overflow: hidden !important;
+  font-size: 22px;
+  color: #1a1b1f;
+}
+
+iframe {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  border: none;
+}
+
+nav {
+  text-transform: capitalize;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+nav #sandwich-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+nav #sandwich-button .sandwich-bar {
+  display: block;
+  width: 40px;
+  height: 6px;
+  margin: 7px;
+  border-radius: 3px;
+  transition: all 300ms ease-in-out;
+  background-color: #1a1b1f;
+}
+
+nav a {
+  text-decoration: none;
+  color: #1a1b1f;
+  padding-bottom: 5px;
+  margin: 0;
+}
+
+nav #gray-sandwich-div {
+  right: 0;
+  top: 0;
+  position: fixed;
+  z-index: 10;
+  display: none;
+  bottom: 0;
+  background: #1a1b1f4d;
+  backdrop-filter: blur(4px);
+  left: 0;
+}
+
+nav .anchor {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+nav .anchor #pop-up-panel {
+  right: 22px;
+  top: 74px;
+  padding: 8px 20px;
+  flex-direction: column;
+  white-space: nowrap;
+  position: absolute;
+  z-index: 100;
+  box-shadow: 0 5px 5px -3px hsla(0, 0%, 0%, 0.2), 0 8px 10px 1px hsla(0, 0%, 0%, 0.14), 0 3px 14px 2px hsla(0, 0%, 0%, 0.12);
+  background-color: white;
+  border-radius: 4px;
+  display: none;
+}
+
+nav .anchor #pop-up-panel .pop-up-layer-0 {
+  color: hsla(240, 100%, 50%, 1);
+  font-weight: 600;
+  font-size: 26px;
+  margin: 9px;
+  user-select: none;
+}
