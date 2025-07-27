@@ -1,4 +1,40 @@
 // Samuel Paluba Portfolio - Content Management System
+
+// Simple YAML Parser (for this specific use case)
+function parseSimpleYaml(yamlString) {
+    const result = {};
+    const lines = yamlString.split('\n');
+    let currentKey = '';
+    let isMultiline = false;
+    let multilineContent = '';
+
+    for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed) continue;
+
+        if (trimmed.endsWith(':') && !trimmed.startsWith('-')) {
+            currentKey = trimmed.slice(0, -1).trim();
+            result[currentKey] = [];
+        } else if (trimmed.startsWith('- ')) {
+            const item = {};
+            const itemLines = trimmed.substring(2).split(', ');
+            itemLines.forEach(itemLine => {
+                const [key, ...valueParts] = itemLine.split(':');
+                const value = valueParts.join(':').trim().replace(/"/g, '');
+                item[key.trim()] = value === 'true' ? true : value === 'false' ? false : value;
+            });
+            if (currentKey) {
+                result[currentKey].push(item);
+            }
+        } else if (trimmed.includes(':')) {
+            const [key, ...valueParts] = trimmed.split(':');
+            const value = valueParts.join(':').trim().replace(/"/g, '');
+            result[key.trim()] = value;
+        }
+    }
+
+    return result;
+}
 class PortfolioCMS {
     constructor() {
         this.content = {};
@@ -27,16 +63,14 @@ class PortfolioCMS {
     parseMarkdownContent(markdown) {
         const content = {};
         const sections = markdown.split('## ');
-        
+
         for (const section of sections) {
             if (!section.trim()) continue;
-            
+
             const lines = section.split('\n');
             const sectionTitle = lines[0].replace(/🔧|🏠|📄|🧑‍🎓|📧|🦶|🧭/g, '').trim();
-            
-            // Parse YAML-like content
             const yamlContent = this.extractYamlFromSection(section);
-            
+
             switch (sectionTitle) {
                 case 'Site Configuration':
                     content.site = yamlContent;
@@ -46,15 +80,15 @@ class PortfolioCMS {
                     break;
                 case 'Resume Section':
                     content.resume = yamlContent;
-                    // Parse resume items
-                    content.resume.items = this.parseResumeItems(section);
+                    // The resume items are now parsed within extractYamlFromSection
                     break;
                 case 'About Section':
                     content.about = yamlContent;
                     break;
                 case 'Contact Section':
-                    content.contact = yamlContent;
-                    // Parse contact methods and social links
+                    content.contact = {};
+                    const contactYaml = this.extractYamlFromSection(section);
+                    content.contact.section_title = contactYaml.section_title;
                     content.contact.methods = this.parseContactMethods(section);
                     content.contact.social = this.parseSocialLinks(section);
                     break;
@@ -66,19 +100,19 @@ class PortfolioCMS {
                     break;
             }
         }
-        
+
         return content;
     }
 
     extractYamlFromSection(section) {
         const yamlBlocks = section.match(/```yaml\n([\s\S]*?)\n```/g);
         if (!yamlBlocks) return {};
-        
-        const result = {};
+
+        let result = {};
         for (const block of yamlBlocks) {
             const yamlContent = block.replace(/```yaml\n|\n```/g, '');
-            const parsed = this.parseSimpleYaml(yamlContent);
-            Object.assign(result, parsed);
+            const parsed = this.parseSimpleYaml(yamlContent.trim());
+            result = { ...result, ...parsed };
         }
         return result;
     }
@@ -89,64 +123,68 @@ class PortfolioCMS {
         let currentKey = '';
         let isMultiline = false;
         let multilineContent = '';
-        
+        let currentArrayName = null;
+
         for (const line of lines) {
             const trimmed = line.trim();
             if (!trimmed) continue;
-            
-            if (trimmed.endsWith('|')) {
-                currentKey = trimmed.split(':')[0].trim();
-                isMultiline = true;
-                multilineContent = '';
+
+            if (trimmed.endsWith(':') && !line.startsWith('  ')) {
+                currentArrayName = trimmed.slice(0, -1);
+                result[currentArrayName] = [];
                 continue;
             }
-            
-            if (isMultiline) {
-                if (line.startsWith('  ')) {
-                    multilineContent += line.substring(2) + '\n';
-                } else {
-                    result[currentKey] = multilineContent.trim();
-                    isMultiline = false;
+
+            if (trimmed.startsWith('- id:')) {
+                const item = {};
+                const itemContent = trimmed.substring(2);
+                const properties = itemContent.split(', ');
+                properties.forEach(prop => {
+                    const [key, ...valueParts] = prop.split(':');
+                    const value = valueParts.join(':').trim().replace(/"/g, '');
+                    item[key.trim()] = value;
+                });
+
+                if (currentArrayName) {
+                    // This is a simplified parser, so we'll assume the next lines are part of this item
+                    const itemLines = lines.slice(lines.indexOf(line) + 1);
+                    for (const itemLine of itemLines) {
+                        const itemTrimmed = itemLine.trim();
+                        if (itemTrimmed.startsWith('- id:')) break;
+                        if (itemTrimmed.includes(':')) {
+                            const [key, ...valueParts] = itemTrimmed.split(':');
+                            const value = valueParts.join(':').trim().replace(/"/g, '');
+                            item[key.trim()] = value;
+                        }
+                    }
+                    result[currentArrayName].push(item);
                 }
                 continue;
             }
-            
+
+
             if (trimmed.includes(':')) {
                 const [key, ...valueParts] = trimmed.split(':');
                 const value = valueParts.join(':').trim().replace(/"/g, '');
                 result[key.trim()] = value;
             }
         }
-        
-        if (isMultiline) {
-            result[currentKey] = multilineContent.trim();
-        }
-        
         return result;
     }
 
+
     parseResumeItems(section) {
         const items = [];
-        const itemBlocks = section.split('- id:').slice(1);
-        
+        const itemsMatch = section.match(/resume_items:\s*([\s\S]*?)(?=\n## |$)/);
+        if (!itemsMatch) return items;
+
+        const itemBlocks = itemsMatch[1].split('- id:').slice(1);
         for (const block of itemBlocks) {
-            const item = {};
-            const lines = block.split('\n');
-            
-            for (const line of lines) {
-                const trimmed = line.trim();
-                if (trimmed.includes(':')) {
-                    const [key, ...valueParts] = trimmed.split(':');
-                    const value = valueParts.join(':').trim().replace(/"/g, '');
-                    item[key.trim()] = value === 'true' ? true : value === 'false' ? false : value;
-                }
-            }
-            
+            const item = this.parseYamlBlock(block);
             if (item.id) {
                 items.push(item);
             }
         }
-        
         return items;
     }
 
@@ -154,13 +192,13 @@ class PortfolioCMS {
         const methods = [];
         const methodsMatch = section.match(/contact_methods:\s*([\s\S]*?)(?=social_links:|$)/);
         if (!methodsMatch) return methods;
-        
+
         const methodBlocks = methodsMatch[1].split('- id:').slice(1);
         for (const block of methodBlocks) {
             const method = this.parseYamlBlock(block);
             if (method.id) methods.push(method);
         }
-        
+
         return methods;
     }
 
@@ -168,13 +206,13 @@ class PortfolioCMS {
         const links = [];
         const linksMatch = section.match(/social_links:\s*([\s\S]*?)$/);
         if (!linksMatch) return links;
-        
+
         const linkBlocks = linksMatch[1].split('- id:').slice(1);
         for (const block of linkBlocks) {
             const link = this.parseYamlBlock(block);
             if (link.id) links.push(link);
         }
-        
+
         return links;
     }
 
@@ -182,29 +220,29 @@ class PortfolioCMS {
         const nav = [];
         const navMatch = section.match(/navigation:\s*([\s\S]*?)$/);
         if (!navMatch) return nav;
-        
+
         const navBlocks = navMatch[1].split('- id:').slice(1);
         for (const block of navBlocks) {
             const item = this.parseYamlBlock(block);
             if (item.id) nav.push(item);
         }
-        
+
         return nav;
     }
 
     parseYamlBlock(block) {
         const item = {};
         const lines = block.split('\n');
-        
+
         for (const line of lines) {
             const trimmed = line.trim();
             if (trimmed.includes(':')) {
                 const [key, ...valueParts] = trimmed.split(':');
-                const value = valueParts.join(':').trim().replace(/"/g, '');
+                const value = valueParts.join(':').trim().replace(/"/g, '').replace(/,$/, '');
                 item[key.trim()] = value === 'true' ? true : value === 'false' ? false : value;
             }
         }
-        
+
         return item;
     }
 
@@ -259,16 +297,16 @@ class PortfolioCMS {
 
     renderNavigation() {
         if (!this.content.navigation) return;
-        
+
         const desktopNav = document.querySelector('#desktop-nav');
         const mobileNav = document.querySelector('#mobile-nav');
-        
+
         if (desktopNav && mobileNav) {
             const navHTML = this.content.navigation
                 .filter(item => item.visible)
                 .map(item => `<a href="${item.target}" class="hover:text-apple-gray-600 transition-colors">${item.title}</a>`)
                 .join('');
-            
+
             desktopNav.innerHTML = navHTML;
             mobileNav.innerHTML = navHTML.replace(/class="[^"]*"/g, 'class="hover:text-apple-gray-600 transition-colors"');
         }
@@ -276,11 +314,11 @@ class PortfolioCMS {
 
     renderHero() {
         if (!this.content.hero) return;
-        
+
         const greetingEl = document.querySelector('#hero-greeting');
         const introEl = document.querySelector('#hero-intro');
         const ctaEl = document.querySelector('#hero-cta');
-        
+
         if (greetingEl && this.content.hero.hero_greeting) {
             greetingEl.innerHTML = this.content.hero.hero_greeting;
         }
@@ -294,27 +332,27 @@ class PortfolioCMS {
 
     renderResume() {
         if (!this.content.resume) return;
-        
+
         const titleEl = document.querySelector('#resume-title');
         const containerEl = document.querySelector('#resume-container');
-        
+
         if (titleEl && this.content.resume.section_title) {
             titleEl.textContent = this.content.resume.section_title;
         }
-        
-        if (containerEl && this.content.resume.items) {
-            const itemsHTML = this.content.resume.items
+
+        if (containerEl && this.content.resume.resume_items) {
+            const itemsHTML = this.content.resume.resume_items
                 .filter(item => item.visible)
                 .map(item => this.createResumeItemHTML(item))
                 .join('');
-            
+
             containerEl.innerHTML = itemsHTML;
         }
     }
 
     createResumeItemHTML(item) {
         const hasLink = item.link && item.link.trim() !== '';
-        const linkHTML = hasLink 
+        const linkHTML = hasLink
             ? `<a href="${item.link}" target="_blank" class="inline-flex items-center text-apple-gray-900 hover:text-apple-gray-600 transition-colors">
                 ${item.status_text}
                 <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -334,14 +372,14 @@ class PortfolioCMS {
 
     renderAbout() {
         if (!this.content.about) return;
-        
+
         const titleEl = document.querySelector('#about-title');
         const contentEl = document.querySelector('#about-content');
-        
+
         if (titleEl && this.content.about.section_title) {
             titleEl.textContent = this.content.about.section_title;
         }
-        
+
         if (contentEl && this.content.about.personal_content) {
             const paragraphs = this.content.about.personal_content.split('\n\n');
             const contentHTML = paragraphs
@@ -353,15 +391,15 @@ class PortfolioCMS {
 
     renderContact() {
         if (!this.content.contact) return;
-        
+
         const titleEl = document.querySelector('#contact-title');
         const methodsEl = document.querySelector('#contact-methods');
         const socialEl = document.querySelector('#social-links');
-        
+
         if (titleEl && this.content.contact.section_title) {
             titleEl.textContent = this.content.contact.section_title;
         }
-        
+
         if (methodsEl && this.content.contact.methods) {
             const methodsHTML = this.content.contact.methods
                 .filter(method => method.visible)
@@ -369,7 +407,7 @@ class PortfolioCMS {
                 .join('');
             methodsEl.innerHTML = methodsHTML;
         }
-        
+
         if (socialEl && this.content.contact.social) {
             const socialHTML = this.content.contact.social
                 .filter(social => social.visible)
@@ -384,7 +422,7 @@ class PortfolioCMS {
         const element = hasLink ? 'a' : 'div';
         const linkAttr = hasLink ? `href="${method.link}" target="_blank"` : '';
         const hoverClass = hasLink ? 'hover:shadow-md transition-shadow cursor-pointer' : '';
-        
+
         return `
             <${element} ${linkAttr} class="bg-white rounded-xl p-6 shadow-sm border border-apple-gray-200 fade-in ${hoverClass}">
                 <h3 class="font-semibold mb-2">${method.title}</h3>
@@ -413,7 +451,7 @@ class PortfolioCMS {
 
     renderFooter() {
         if (!this.content.footer) return;
-        
+
         const footerEl = document.querySelector('#footer-text');
         if (footerEl && this.content.footer.footer_text) {
             footerEl.textContent = this.content.footer.footer_text;
@@ -422,10 +460,11 @@ class PortfolioCMS {
 
     setupEventListeners() {
         // Listen for content changes
-        document.addEventListener('contentUpdated', () => {
+        document.addEventListener('contentUpdated', (e) => {
+            this.content = e.detail;
             this.renderContent();
         });
-        
+
         // Admin mode toggle
         document.addEventListener('keydown', (e) => {
             if (e.ctrlKey && e.shiftKey && e.key === 'A') {
@@ -472,9 +511,9 @@ class PortfolioCMS {
 
     // Method to update content and refresh display
     updateContent(newContent) {
-        this.content = { ...this.content, ...newContent };
+        this.content = newContent;
         this.renderContent();
-        
+
         // Trigger animations for new elements
         setTimeout(() => {
             document.querySelectorAll('.fade-in').forEach(el => {
@@ -493,7 +532,7 @@ class PortfolioCMS {
         // Convert content object back to markdown format
         // This would be the reverse of parseMarkdownContent
         let markdown = '# Samuel Paluba Portfolio - Content Management\n\n';
-        
+
         // Implementation would go here to convert content object back to markdown
         // For now, return a basic structure
         return markdown;
