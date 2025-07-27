@@ -1,12 +1,14 @@
 // Samuel Paluba Portfolio - Content Management System
 class PortfolioCMS {
     constructor() {
+        console.log('PortfolioCMS constructor');
         this.content = {};
         this.isAdminMode = false;
         this.init();
     }
 
     async init() {
+        console.log('initializing cms');
         await this.loadContent();
         this.renderContent();
         this.setupEventListeners();
@@ -14,6 +16,7 @@ class PortfolioCMS {
     }
 
     async loadContent() {
+        console.log('loading content');
         try {
             const response = await fetch('content.md');
             const markdown = await response.text();
@@ -27,53 +30,42 @@ class PortfolioCMS {
     parseMarkdownContent(markdown) {
         const content = {};
         const sections = markdown.split('## ');
+        console.log('sections', sections);
 
         for (const section of sections) {
             if (!section.trim()) continue;
 
             const lines = section.split('\n');
             const sectionTitle = lines[0].replace(/🔧|🏠|📄|🧑‍🎓|📧|🦶|🧭/g, '').trim();
+            console.log('sectionTitle', sectionTitle);
+            const yamlContent = this.extractYamlFromSection(section);
+            console.log('yamlContent', yamlContent);
 
-            if (sectionTitle === 'Contact Section') {
-                content.contact = {};
-                const contactSections = section.split('### ');
-                for (const contactSection of contactSections) {
-                    if (!contactSection.trim()) continue;
-                    const contactLines = contactSection.split('\n');
-                    const contactSectionTitle = contactLines[0].trim();
-                    const yamlContent = this.extractYamlFromSection(contactSection);
-                    if (contactSectionTitle === 'Contact Methods') {
-                        content.contact.contact_methods = yamlContent.contact_methods;
-                    } else if (contactSectionTitle === 'Social Media') {
-                        content.contact.social_links = yamlContent.social_links;
-                    } else {
-                        Object.assign(content.contact, yamlContent);
-                    }
-                }
-            } else {
-                const yamlContent = this.extractYamlFromSection(section);
-                switch (sectionTitle) {
-                    case 'Site Configuration':
-                        content.site = yamlContent;
-                        break;
-                    case 'Hero Section':
-                        content.hero = yamlContent;
-                        break;
-                    case 'Resume Section':
-                        content.resume = yamlContent;
-                        break;
-                    case 'About Section':
-                        content.about = yamlContent;
-                        break;
-                    case 'Footer':
-                        content.footer = yamlContent;
-                        break;
-                    case 'Navigation':
-                        content.navigation = yamlContent.navigation;
-                        break;
-                }
+            switch (sectionTitle) {
+                case 'Site Configuration':
+                    content.site = yamlContent;
+                    break;
+                case 'Hero Section':
+                    content.hero = yamlContent;
+                    break;
+                case 'Resume Section':
+                    content.resume = yamlContent;
+                    break;
+                case 'About Section':
+                    content.about = yamlContent;
+                    break;
+                case 'Contact Section':
+                    content.contact = yamlContent;
+                    break;
+                case 'Footer':
+                    content.footer = yamlContent;
+                    break;
+                case 'Navigation':
+                    content.navigation = yamlContent.navigation;
+                    break;
             }
         }
+        console.log('content', content);
         return content;
     }
 
@@ -393,11 +385,6 @@ class PortfolioCMS {
         }, 100);
     }
 }
-
-// Initialize CMS when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    window.portfolioCMS = new PortfolioCMS();
-});
 
 // Export for use in other scripts
 if (typeof module !== 'undefined' && module.exports) {
