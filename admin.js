@@ -251,9 +251,15 @@ class AdminPanel {
 
     loadContactContent(container) {
         container.innerHTML = `
-            <h3 class="text-lg font-semibold mb-4">Contact Methods</h3>
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold">Contact Methods</h3>
+                <button id="add-contact-method" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">➕ Add Method</button>
+            </div>
             <div id="contact-methods-list"></div>
-            <h3 class="text-lg font-semibold mb-4 mt-8">Social Media Links</h3>
+            <div class="flex justify-between items-center mb-4 mt-8">
+                <h3 class="text-lg font-semibold">Social Media Links</h3>
+                <button id="add-social-link" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">➕ Add Link</button>
+            </div>
             <div id="social-links-list"></div>
         `;
         const methodsContainer = container.querySelector('#contact-methods-list');
@@ -281,6 +287,31 @@ class AdminPanel {
                 socialContainer.appendChild(this.createEditorField(item, index, fields, 'contact', 'social_links'));
             });
         }
+
+        container.querySelector('#add-contact-method').addEventListener('click', () => {
+            if (!this.cms.content.contact) this.cms.content.contact = { contact_methods: [] };
+            if (!this.cms.content.contact.contact_methods) this.cms.content.contact.contact_methods = [];
+            this.cms.content.contact.contact_methods.push({
+                id: `method_${Date.now()}`,
+                title: 'New Method',
+                description: '',
+                link: '',
+                visible: true
+            });
+            this.loadContactContent(container);
+        });
+
+        container.querySelector('#add-social-link').addEventListener('click', () => {
+            if (!this.cms.content.contact) this.cms.content.contact = { social_links: [] };
+            if (!this.cms.content.contact.social_links) this.cms.content.contact.social_links = [];
+            this.cms.content.contact.social_links.push({
+                id: `social_${Date.now()}`,
+                platform: 'New Platform',
+                url: '',
+                visible: true
+            });
+            this.loadContactContent(container);
+        });
     }
 
     loadSettingsContent(container) {

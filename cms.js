@@ -33,30 +33,45 @@ class PortfolioCMS {
 
             const lines = section.split('\n');
             const sectionTitle = lines[0].replace(/🔧|🏠|📄|🧑‍🎓|📧|🦶|🧭/g, '').trim();
-            const yamlContent = this.extractYamlFromSection(section);
 
-            switch (sectionTitle) {
-                case 'Site Configuration':
-                    content.site = yamlContent;
-                    break;
-                case 'Hero Section':
-                    content.hero = yamlContent;
-                    break;
-                case 'Resume Section':
-                    content.resume = yamlContent;
-                    break;
-                case 'About Section':
-                    content.about = yamlContent;
-                    break;
-                case 'Contact Section':
-                    content.contact = yamlContent;
-                    break;
-                case 'Footer':
-                    content.footer = yamlContent;
-                    break;
-                case 'Navigation':
-                    content.navigation = yamlContent.navigation;
-                    break;
+            if (sectionTitle === 'Contact Section') {
+                content.contact = {};
+                const contactSections = section.split('### ');
+                for (const contactSection of contactSections) {
+                    if (!contactSection.trim()) continue;
+                    const contactLines = contactSection.split('\n');
+                    const contactSectionTitle = contactLines[0].trim();
+                    const yamlContent = this.extractYamlFromSection(contactSection);
+                    if (contactSectionTitle === 'Contact Methods') {
+                        content.contact.contact_methods = yamlContent.contact_methods;
+                    } else if (contactSectionTitle === 'Social Media') {
+                        content.contact.social_links = yamlContent.social_links;
+                    } else {
+                        Object.assign(content.contact, yamlContent);
+                    }
+                }
+            } else {
+                const yamlContent = this.extractYamlFromSection(section);
+                switch (sectionTitle) {
+                    case 'Site Configuration':
+                        content.site = yamlContent;
+                        break;
+                    case 'Hero Section':
+                        content.hero = yamlContent;
+                        break;
+                    case 'Resume Section':
+                        content.resume = yamlContent;
+                        break;
+                    case 'About Section':
+                        content.about = yamlContent;
+                        break;
+                    case 'Footer':
+                        content.footer = yamlContent;
+                        break;
+                    case 'Navigation':
+                        content.navigation = yamlContent.navigation;
+                        break;
+                }
             }
         }
         return content;
