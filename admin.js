@@ -54,80 +54,11 @@ class AdminPanel {
                 </div>
 
                 <!-- Admin Content -->
-                <div class="admin-content flex-1 overflow-hidden">
-                    <div class="h-full flex">
-                        <!-- Edit Panel -->
-                        <div class="edit-panel w-1/2 p-6 overflow-y-auto border-r border-apple-gray-200">
-                            <div id="content-tab" class="tab-content">
-                                <h3 class="text-lg font-semibold mb-4">Main Content</h3>
-                                
-                                <div class="form-group mb-6">
-                                    <label class="block text-sm font-medium mb-2">Site Title</label>
-                                    <input type="text" id="site-title" class="w-full p-3 border border-apple-gray-300 rounded">
-                                </div>
-
-                                <div class="form-group mb-6">
-                                    <label class="block text-sm font-medium mb-2">Hero Greeting</label>
-                                    <input type="text" id="hero-greeting-input" class="w-full p-3 border border-apple-gray-300 rounded">
-                                </div>
-
-                                <div class="form-group mb-6">
-                                    <label class="block text-sm font-medium mb-2">Hero Introduction</label>
-                                    <textarea id="hero-intro-input" rows="4" class="w-full p-3 border border-apple-gray-300 rounded"></textarea>
-                                </div>
-
-                                <div class="form-group mb-6">
-                                    <label class="block text-sm font-medium mb-2">CTA Button Text</label>
-                                    <input type="text" id="cta-button" class="w-full p-3 border border-apple-gray-300 rounded">
-                                </div>
-
-                                <div class="form-group mb-6">
-                                    <label class="block text-sm font-medium mb-2">About Content</label>
-                                    <textarea id="about-content-input" rows="6" class="w-full p-3 border border-apple-gray-300 rounded"></textarea>
-                                </div>
-                            </div>
-
-                            <div id="resume-tab" class="tab-content hidden">
-                                <div class="flex justify-between items-center mb-4">
-                                    <h3 class="text-lg font-semibold">Resume Items</h3>
-                                    <button id="add-resume-item" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-                                        ➕ Add Item
-                                    </button>
-                                </div>
-                                <div id="resume-items-list"></div>
-                            </div>
-
-                            <div id="contact-tab" class="tab-content hidden">
-                                <h3 class="text-lg font-semibold mb-4">Contact Methods</h3>
-                                <div id="contact-methods-list"></div>
-                                
-                                <h3 class="text-lg font-semibold mb-4 mt-8">Social Media Links</h3>
-                                <div id="social-links-list"></div>
-                            </div>
-
-                            <div id="settings-tab" class="tab-content hidden">
-                                <h3 class="text-lg font-semibold mb-4">Navigation Settings</h3>
-                                <div id="navigation-list"></div>
-                                
-                                <h3 class="text-lg font-semibold mb-4 mt-8">Footer</h3>
-                                <div class="form-group">
-                                    <label class="block text-sm font-medium mb-2">Footer Text</label>
-                                    <input type="text" id="footer-text-input" class="w-full p-3 border border-apple-gray-300 rounded">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Live Preview Panel -->
-                        <div class="preview-panel w-1/2 bg-apple-gray-50">
-                            <div class="p-4 bg-white border-b border-apple-gray-200">
-                                <h3 class="font-semibold">Live Preview</h3>
-                                <p class="text-sm text-apple-gray-600">Changes appear instantly</p>
-                            </div>
-                            <div class="preview-content p-4 h-full overflow-y-auto">
-                                <iframe id="preview-iframe" src="index.html" class="w-full h-full border-0 rounded"></iframe>
-                            </div>
-                        </div>
-                    </div>
+                <div class="admin-content flex-1 overflow-y-auto p-6">
+                    <div id="content-tab" class="tab-content"></div>
+                    <div id="resume-tab" class="tab-content hidden"></div>
+                    <div id="contact-tab" class="tab-content hidden"></div>
+                    <div id="settings-tab" class="tab-content hidden"></div>
                 </div>
             </div>
         `;
@@ -137,371 +68,297 @@ class AdminPanel {
     }
 
     setupAdminEventListeners() {
-        // Tab switching
-        document.querySelectorAll('.tab-btn').forEach(btn => {
+        this.adminPanel.querySelector('#close-admin').addEventListener('click', () => this.hide());
+        this.adminPanel.querySelector('#save-changes').addEventListener('click', () => this.saveChanges());
+        this.adminPanel.querySelector('#export-content').addEventListener('click', () => this.exportContent());
+
+        this.adminPanel.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 this.switchTab(e.target.dataset.tab);
             });
         });
-
-        // Close admin
-        document.getElementById('close-admin').addEventListener('click', () => {
-            this.hide();
-        });
-
-        // Save changes
-        document.getElementById('save-changes').addEventListener('click', () => {
-            this.saveChanges();
-        });
-
-        // Export content
-        document.getElementById('export-content').addEventListener('click', () => {
-            this.exportContent();
-        });
-
-        // Add resume item
-        document.getElementById('add-resume-item').addEventListener('click', () => {
-            this.addResumeItem();
-        });
-
-        // Real-time updates
-        this.setupRealTimeEditing();
     }
 
-    setupRealTimeEditing() {
-        // Hero section
-        const heroGreetingInput = document.getElementById('hero-greeting-input');
-        const heroIntroInput = document.getElementById('hero-intro-input');
-        const ctaButtonInput = document.getElementById('cta-button');
-        const aboutContentInput = document.getElementById('about-content-input');
-        const footerTextInput = document.getElementById('footer-text-input');
-
-        if (heroGreetingInput) {
-            heroGreetingInput.addEventListener('input', (e) => {
-                this.updateContent('hero', 'hero_greeting', e.target.value);
-            });
+    updateContent(section, key, value, index = -1) {
+        if (index > -1) {
+            if (!this.cms.content[section][key]) {
+                this.cms.content[section][key] = [];
+            }
+            this.cms.content[section][key][index] = value;
+        } else {
+            if (!this.cms.content[section]) {
+                this.cms.content[section] = {};
+            }
+            this.cms.content[section][key] = value;
         }
-
-        if (heroIntroInput) {
-            heroIntroInput.addEventListener('input', (e) => {
-                this.updateContent('hero', 'hero_intro', e.target.value);
-            });
-        }
-
-        if (ctaButtonInput) {
-            ctaButtonInput.addEventListener('input', (e) => {
-                this.updateContent('hero', 'cta_button', e.target.value);
-            });
-        }
-
-        if (aboutContentInput) {
-            aboutContentInput.addEventListener('input', (e) => {
-                this.updateContent('about', 'personal_content', e.target.value);
-            });
-        }
-
-        if (footerTextInput) {
-            footerTextInput.addEventListener('input', (e) => {
-                this.updateContent('footer', 'footer_text', e.target.value);
-            });
-        }
+        this.cms.updateContent(this.cms.content);
     }
 
-    updateContent(section, key, value) {
-        if (!this.cms.content[section]) {
-            this.cms.content[section] = {};
-        }
-        this.cms.content[section][key] = value;
-        this.cms.renderContent();
-        this.refreshPreview();
-    }
+    createEditorField(item, index, fields, section, key) {
+        const container = document.createElement('div');
+        container.className = 'editor-item bg-white p-4 rounded-lg border border-apple-gray-200 mb-4';
 
-    refreshPreview() {
-        const iframe = document.getElementById('preview-iframe');
-        if (iframe) {
-            iframe.src = iframe.src; // Force reload
-        }
-    }
-
-    switchTab(tabName) {
-        // Update tab buttons
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.classList.remove('active');
-            if (btn.dataset.tab === tabName) {
-                btn.classList.add('active');
+        let fieldsHTML = '';
+        fields.forEach(field => {
+            if (field.type === 'checkbox') {
+                fieldsHTML += `
+                    <label class="flex items-center">
+                        <input type="checkbox" ${item[field.id] ? 'checked' : ''} class="mr-2" data-field="${field.id}" data-index="${index}">
+                        ${field.label}
+                    </label>
+                `;
+            } else if (field.type === 'textarea') {
+                fieldsHTML += `
+                    <div class="mt-4">
+                        <label class="block text-sm font-medium mb-1">${field.label}</label>
+                        <textarea rows="3" class="w-full p-2 border rounded" data-field="${field.id}" data-index="${index}">${item[field.id] || ''}</textarea>
+                    </div>
+                `;
+            } else {
+                fieldsHTML += `
+                    <div>
+                        <label class="block text-sm font-medium mb-1">${field.label}</label>
+                        <input type="${field.type}" value="${item[field.id] || ''}" class="w-full p-2 border rounded" data-field="${field.id}" data-index="${index}">
+                    </div>
+                `;
             }
         });
 
-        // Update tab content
-        document.querySelectorAll('.tab-content').forEach(content => {
-            content.classList.add('hidden');
-        });
-        document.getElementById(`${tabName}-tab`).classList.remove('hidden');
+        container.innerHTML = `
+            <div class="flex justify-between items-start mb-4">
+                <h4 class="font-semibold">${item.title || 'New Item'}</h4>
+                <button class="text-red-600 hover:text-red-800" data-index="${index}">🗑️</button>
+            </div>
+            <div class="grid grid-cols-2 gap-4">${fieldsHTML}</div>
+        `;
 
+        container.querySelectorAll('input, textarea').forEach(input => {
+            input.addEventListener('input', (e) => {
+                const field = e.target.dataset.field;
+                const index = parseInt(e.target.dataset.index);
+                const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+                item[field] = value;
+                this.updateContent(section, key, this.cms.content[section][key]);
+            });
+        });
+
+        container.querySelector('button').addEventListener('click', (e) => {
+            const index = parseInt(e.target.dataset.index);
+            this.cms.content[section][key].splice(index, 1);
+            this.updateContent(section, key, this.cms.content[section][key]);
+            this.loadTabContent(this.currentTab);
+        });
+
+        return container;
+    }
+
+    switchTab(tabName) {
+        this.adminPanel.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        this.adminPanel.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+        this.adminPanel.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
+        this.adminPanel.querySelector(`#${tabName}-tab`).classList.remove('hidden');
         this.currentTab = tabName;
         this.loadTabContent(tabName);
     }
 
     loadTabContent(tabName) {
+        const tabContainer = this.adminPanel.querySelector(`#${tabName}-tab`);
+        tabContainer.innerHTML = ''; // Clear previous content
+
         switch (tabName) {
             case 'content':
-                this.loadContentTab();
+                this.loadMainContent(tabContainer);
                 break;
             case 'resume':
-                this.loadResumeTab();
+                this.loadResumeContent(tabContainer);
                 break;
             case 'contact':
-                this.loadContactTab();
+                this.loadContactContent(tabContainer);
                 break;
             case 'settings':
-                this.loadSettingsTab();
+                this.loadSettingsContent(tabContainer);
                 break;
         }
     }
 
-    loadContentTab() {
-        if (this.cms.content.site) {
-            document.getElementById('site-title').value = this.cms.content.site.site_title || '';
-        }
-        if (this.cms.content.hero) {
-            document.getElementById('hero-greeting-input').value = this.cms.content.hero.hero_greeting || '';
-            document.getElementById('hero-intro-input').value = this.cms.content.hero.hero_intro || '';
-            document.getElementById('cta-button').value = this.cms.content.hero.cta_button || '';
-        }
-        if (this.cms.content.about) {
-            document.getElementById('about-content-input').value = this.cms.content.about.personal_content || '';
-        }
-    }
-
-    loadResumeTab() {
-        const container = document.getElementById('resume-items-list');
-        container.innerHTML = '';
-
-        if (this.cms.content.resume && this.cms.content.resume.items) {
-            this.cms.content.resume.items.forEach((item, index) => {
-                container.appendChild(this.createResumeItemEditor(item, index));
-            });
-        }
-    }
-
-    createResumeItemEditor(item, index) {
-        const div = document.createElement('div');
-        div.className = 'resume-item-editor bg-white p-4 rounded-lg border border-apple-gray-200 mb-4';
-        
-        div.innerHTML = `
-            <div class="flex justify-between items-start mb-4">
-                <h4 class="font-semibold">Item ${index + 1}</h4>
-                <div class="flex space-x-2">
-                    <label class="flex items-center">
-                        <input type="checkbox" ${item.visible ? 'checked' : ''} class="mr-2" data-field="visible" data-index="${index}">
-                        Visible
-                    </label>
-                    <button class="text-red-600 hover:text-red-800" onclick="this.parentElement.parentElement.parentElement.remove()">
-                        🗑️
-                    </button>
-                </div>
+    loadMainContent(container) {
+        container.innerHTML = `
+            <h3 class="text-lg font-semibold mb-4">Main Content</h3>
+            <div class="form-group mb-6">
+                <label class="block text-sm font-medium mb-2">Site Title</label>
+                <input type="text" id="site-title" class="w-full p-3 border border-apple-gray-300 rounded" value="${this.cms.content.site?.site_title || ''}">
             </div>
-            
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium mb-1">Title</label>
-                    <input type="text" value="${item.title || ''}" class="w-full p-2 border rounded" data-field="title" data-index="${index}">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium mb-1">Status Text</label>
-                    <input type="text" value="${item.status_text || ''}" class="w-full p-2 border rounded" data-field="status_text" data-index="${index}">
-                </div>
+            <div class="form-group mb-6">
+                <label class="block text-sm font-medium mb-2">Hero Greeting</label>
+                <input type="text" id="hero-greeting-input" class="w-full p-3 border border-apple-gray-300 rounded" value="${this.cms.content.hero?.hero_greeting || ''}">
             </div>
-            
-            <div class="mt-4">
-                <label class="block text-sm font-medium mb-1">Description</label>
-                <textarea rows="3" class="w-full p-2 border rounded" data-field="description" data-index="${index}">${item.description || ''}</textarea>
+            <div class="form-group mb-6">
+                <label class="block text-sm font-medium mb-2">Hero Introduction</label>
+                <textarea id="hero-intro-input" rows="4" class="w-full p-3 border border-apple-gray-300 rounded">${this.cms.content.hero?.hero_intro || ''}</textarea>
             </div>
-            
-            <div class="mt-4">
-                <label class="block text-sm font-medium mb-1">Link (optional)</label>
-                <input type="url" value="${item.link || ''}" class="w-full p-2 border rounded" data-field="link" data-index="${index}">
+            <div class="form-group mb-6">
+                <label class="block text-sm font-medium mb-2">CTA Button Text</label>
+                <input type="text" id="cta-button" class="w-full p-3 border border-apple-gray-300 rounded" value="${this.cms.content.hero?.cta_button || ''}">
+            </div>
+            <div class="form-group mb-6">
+                <label class="block text-sm font-medium mb-2">About Content</label>
+                <textarea id="about-content-input" rows="6" class="w-full p-3 border border-apple-gray-300 rounded">${this.cms.content.about?.personal_content || ''}</textarea>
             </div>
         `;
+        container.querySelector('#site-title').addEventListener('input', (e) => this.updateContent('site', 'site_title', e.target.value));
+        container.querySelector('#hero-greeting-input').addEventListener('input', (e) => this.updateContent('hero', 'hero_greeting', e.target.value));
+        container.querySelector('#hero-intro-input').addEventListener('input', (e) => this.updateContent('hero', 'hero_intro', e.target.value));
+        container.querySelector('#cta-button').addEventListener('input', (e) => this.updateContent('hero', 'cta_button', e.target.value));
+        container.querySelector('#about-content-input').addEventListener('input', (e) => this.updateContent('about', 'personal_content', e.target.value));
+    }
 
-        // Add event listeners for real-time updates
-        div.querySelectorAll('input, textarea').forEach(input => {
-            input.addEventListener('input', (e) => {
-                const field = e.target.dataset.field;
-                const index = parseInt(e.target.dataset.index);
-                const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-                
-                if (this.cms.content.resume && this.cms.content.resume.items[index]) {
-                    this.cms.content.resume.items[index][field] = value;
-                    this.cms.renderContent();
-                }
+    loadResumeContent(container) {
+        const listContainer = document.createElement('div');
+        container.innerHTML = `
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold">Resume Items</h3>
+                <button id="add-resume-item" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">➕ Add Item</button>
+            </div>
+        `;
+        container.appendChild(listContainer);
+
+        if (this.cms.content.resume?.resume_items) {
+            this.cms.content.resume.resume_items.forEach((item, index) => {
+                const fields = [
+                    { id: 'title', label: 'Title', type: 'text' },
+                    { id: 'status_text', label: 'Status Text', type: 'text' },
+                    { id: 'description', label: 'Description', type: 'textarea' },
+                    { id: 'link', label: 'Link (optional)', type: 'url' },
+                    { id: 'visible', label: 'Visible', type: 'checkbox' },
+                ];
+                listContainer.appendChild(this.createEditorField(item, index, fields, 'resume', 'resume_items'));
             });
+        }
+        
+        container.querySelector('#add-resume-item').addEventListener('click', () => {
+            if (!this.cms.content.resume) this.cms.content.resume = { resume_items: [] };
+            this.cms.content.resume.resume_items.push({
+                id: `item_${Date.now()}`,
+                title: 'New Item',
+                description: '',
+                status_text: 'New',
+                link: '',
+                visible: true
+            });
+            this.loadResumeContent(container);
         });
-
-        return div;
     }
 
-    addResumeItem() {
-        if (!this.cms.content.resume) {
-            this.cms.content.resume = { items: [] };
-        }
-        if (!this.cms.content.resume.items) {
-            this.cms.content.resume.items = [];
+    loadContactContent(container) {
+        container.innerHTML = `
+            <h3 class="text-lg font-semibold mb-4">Contact Methods</h3>
+            <div id="contact-methods-list"></div>
+            <h3 class="text-lg font-semibold mb-4 mt-8">Social Media Links</h3>
+            <div id="social-links-list"></div>
+        `;
+        const methodsContainer = container.querySelector('#contact-methods-list');
+        const socialContainer = container.querySelector('#social-links-list');
+
+        if (this.cms.content.contact?.contact_methods) {
+            this.cms.content.contact.contact_methods.forEach((item, index) => {
+                const fields = [
+                    { id: 'title', label: 'Title', type: 'text' },
+                    { id: 'description', label: 'Description', type: 'text' },
+                    { id: 'link', label: 'Link', type: 'url' },
+                    { id: 'visible', label: 'Visible', type: 'checkbox' },
+                ];
+                methodsContainer.appendChild(this.createEditorField(item, index, fields, 'contact', 'contact_methods'));
+            });
         }
 
-        const newItem = {
-            id: `item_${Date.now()}`,
-            title: "🆕 New Item",
-            description: "Description for new item...",
-            status_text: "New",
-            link: "",
-            visible: true
-        };
-
-        this.cms.content.resume.items.push(newItem);
-        this.loadResumeTab();
-        this.cms.renderContent();
-    }
-
-    loadContactTab() {
-        // Implementation for contact methods and social links editing
-        const methodsContainer = document.getElementById('contact-methods-list');
-        const socialContainer = document.getElementById('social-links-list');
-        
-        // Contact methods
-        if (this.cms.content.contact && this.cms.content.contact.methods) {
-            methodsContainer.innerHTML = this.cms.content.contact.methods
-                .map((method, index) => this.createContactMethodEditor(method, index))
-                .join('');
-        }
-        
-        // Social links
-        if (this.cms.content.contact && this.cms.content.contact.social) {
-            socialContainer.innerHTML = this.cms.content.contact.social
-                .map((social, index) => this.createSocialLinkEditor(social, index))
-                .join('');
+        if (this.cms.content.contact?.social_links) {
+            this.cms.content.contact.social_links.forEach((item, index) => {
+                const fields = [
+                    { id: 'platform', label: 'Platform', type: 'text' },
+                    { id: 'url', label: 'URL', type: 'url' },
+                    { id: 'visible', label: 'Visible', type: 'checkbox' },
+                ];
+                socialContainer.appendChild(this.createEditorField(item, index, fields, 'contact', 'social_links'));
+            });
         }
     }
 
-    createContactMethodEditor(method, index) {
-        return `
-            <div class="contact-method-editor bg-white p-4 rounded-lg border border-apple-gray-200 mb-4">
-                <div class="flex justify-between items-center mb-4">
-                    <h5 class="font-medium">${method.title}</h5>
-                    <label class="flex items-center">
-                        <input type="checkbox" ${method.visible ? 'checked' : ''} class="mr-2" onchange="updateContactMethod(${index}, 'visible', this.checked)">
-                        Visible
-                    </label>
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium mb-1">Title</label>
-                        <input type="text" value="${method.title || ''}" class="w-full p-2 border rounded" onchange="updateContactMethod(${index}, 'title', this.value)">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">Description</label>
-                        <input type="text" value="${method.description || ''}" class="w-full p-2 border rounded" onchange="updateContactMethod(${index}, 'description', this.value)">
-                    </div>
-                </div>
+    loadSettingsContent(container) {
+        container.innerHTML = `
+            <h3 class="text-lg font-semibold mb-4">Navigation Settings</h3>
+            <div id="navigation-list"></div>
+            <h3 class="text-lg font-semibold mb-4 mt-8">Footer</h3>
+            <div class="form-group">
+                <label class="block text-sm font-medium mb-2">Footer Text</label>
+                <input type="text" id="footer-text-input" class="w-full p-3 border border-apple-gray-300 rounded" value="${this.cms.content.footer?.footer_text || ''}">
             </div>
         `;
-    }
-
-    createSocialLinkEditor(social, index) {
-        return `
-            <div class="social-link-editor bg-white p-4 rounded-lg border border-apple-gray-200 mb-4">
-                <div class="flex justify-between items-center mb-4">
-                    <h5 class="font-medium">${social.platform}</h5>
-                    <label class="flex items-center">
-                        <input type="checkbox" ${social.visible ? 'checked' : ''} class="mr-2" onchange="updateSocialLink(${index}, 'visible', this.checked)">
-                        Visible
-                    </label>
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium mb-1">Platform</label>
-                        <input type="text" value="${social.platform || ''}" class="w-full p-2 border rounded" onchange="updateSocialLink(${index}, 'platform', this.value)">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">URL</label>
-                        <input type="url" value="${social.url || ''}" class="w-full p-2 border rounded" onchange="updateSocialLink(${index}, 'url', this.value)">
-                    </div>
-                </div>
-            </div>
-        `;
-    }
-
-    loadSettingsTab() {
-        // Navigation settings
-        const navContainer = document.getElementById('navigation-list');
+        const navContainer = container.querySelector('#navigation-list');
         if (this.cms.content.navigation) {
-            navContainer.innerHTML = this.cms.content.navigation
-                .map((item, index) => this.createNavigationEditor(item, index))
-                .join('');
+            this.cms.content.navigation.forEach((item, index) => {
+                const fields = [
+                    { id: 'title', label: 'Title', type: 'text' },
+                    { id: 'target', label: 'Target', type: 'text' },
+                    { id: 'visible', label: 'Visible', type: 'checkbox' },
+                ];
+                navContainer.appendChild(this.createEditorField(item, index, fields, 'navigation', null));
+            });
         }
-
-        // Footer
-        if (this.cms.content.footer) {
-            document.getElementById('footer-text-input').value = this.cms.content.footer.footer_text || '';
-        }
-    }
-
-    createNavigationEditor(item, index) {
-        return `
-            <div class="nav-item-editor bg-white p-4 rounded-lg border border-apple-gray-200 mb-4">
-                <div class="flex justify-between items-center mb-4">
-                    <h5 class="font-medium">${item.title}</h5>
-                    <label class="flex items-center">
-                        <input type="checkbox" ${item.visible ? 'checked' : ''} class="mr-2">
-                        Visible
-                    </label>
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium mb-1">Title</label>
-                        <input type="text" value="${item.title || ''}" class="w-full p-2 border rounded">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">Target</label>
-                        <input type="text" value="${item.target || ''}" class="w-full p-2 border rounded">
-                    </div>
-                </div>
-            </div>
-        `;
+        container.querySelector('#footer-text-input').addEventListener('input', (e) => this.updateContent('footer', 'footer_text', e.target.value));
     }
 
     saveChanges() {
-        // Generate updated markdown content
         const markdown = this.generateMarkdown();
-        
-        // In a real implementation, this would save to the server
-        console.log('Saving changes...');
         this.downloadFile('content.md', markdown);
-        
         alert('✅ Changes saved! Download the updated content.md file.');
     }
 
     generateMarkdown() {
-        // Convert current content back to markdown format
+        const { site, hero, resume, about, contact, footer, navigation } = this.cms.content;
         let md = '# Samuel Paluba Portfolio - Content Management\n\n';
-        
-        // Add sections based on current content
-        if (this.cms.content.site) {
+
+        if (site) {
             md += '## 🔧 Site Configuration\n```yaml\n';
-            md += `site_title: "${this.cms.content.site.site_title}"\n`;
-            md += `name: "${this.cms.content.site.name}"\n`;
+            md += jsyaml.dump(site);
             md += '```\n\n';
         }
 
-        if (this.cms.content.hero) {
+        if (hero) {
             md += '## 🏠 Hero Section\n```yaml\n';
-            md += `hero_greeting: "${this.cms.content.hero.hero_greeting}"\n`;
-            md += `hero_intro: "${this.cms.content.hero.hero_intro}"\n`;
-            md += `cta_button: "${this.cms.content.hero.cta_button}"\n`;
+            md += jsyaml.dump(hero);
             md += '```\n\n';
         }
 
-        // Add more sections...
+        if (resume) {
+            md += '## 📄 Resume Section\n```yaml\n';
+            md += jsyaml.dump(resume);
+            md += '```\n\n';
+        }
+
+        if (about) {
+            md += '## 🧑‍🎓 About Section\n```yaml\n';
+            md += jsyaml.dump(about);
+            md += '```\n\n';
+        }
+
+        if (contact) {
+            md += '## 📧 Contact Section\n```yaml\n';
+            md += jsyaml.dump(contact);
+            md += '```\n\n';
+        }
+
+        if (footer) {
+            md += '## 🦶 Footer\n```yaml\n';
+            md += jsyaml.dump(footer);
+            md += '```\n\n';
+        }
+
+        if (navigation) {
+            md += '## 🧭 Navigation\n```yaml\n';
+            md += jsyaml.dump({ navigation: navigation });
+            md += '```\n\n';
+        }
+
         return md;
     }
 
@@ -543,80 +400,6 @@ class AdminPanel {
         }
     }
 }
-
-// CSS Styles for Admin Panel
-const adminStyles = `
-<style>
-    .admin-container {
-        font-family: 'JetBrains Mono', monospace;
-    }
-    
-    .tab-btn.active {
-        background-color: white;
-        border-bottom: 2px solid #1f2937;
-    }
-    
-    .tab-btn:not(.active) {
-        background-color: #f3f4f6;
-        color: #6b7280;
-    }
-    
-    .tab-btn:not(.active):hover {
-        background-color: #e5e7eb;
-        color: #374151;
-    }
-    
-    .form-group label {
-        color: #374151;
-        font-weight: 500;
-    }
-    
-    .form-group input,
-    .form-group textarea {
-        border: 1px solid #d1d5db;
-        font-family: 'JetBrains Mono', monospace;
-    }
-    
-    .form-group input:focus,
-    .form-group textarea:focus {
-        outline: none;
-        border-color: #1f2937;
-        box-shadow: 0 0 0 3px rgba(31, 41, 55, 0.1);
-    }
-    
-    .resume-item-editor,
-    .contact-method-editor,
-    .social-link-editor,
-    .nav-item-editor {
-        transition: all 0.3s ease;
-    }
-    
-    .resume-item-editor:hover,
-    .contact-method-editor:hover,
-    .social-link-editor:hover,
-    .nav-item-editor:hover {
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-</style>
-`;
-
-// Inject admin styles
-document.head.insertAdjacentHTML('beforeend', adminStyles);
-
-// Global functions for admin panel
-window.updateContactMethod = function(index, field, value) {
-    if (window.portfolioCMS && window.portfolioCMS.content.contact && window.portfolioCMS.content.contact.methods[index]) {
-        window.portfolioCMS.content.contact.methods[index][field] = value;
-        window.portfolioCMS.renderContent();
-    }
-};
-
-window.updateSocialLink = function(index, field, value) {
-    if (window.portfolioCMS && window.portfolioCMS.content.contact && window.portfolioCMS.content.contact.social[index]) {
-        window.portfolioCMS.content.contact.social[index][field] = value;
-        window.portfolioCMS.renderContent();
-    }
-};
 
 // Initialize admin panel when CMS is ready
 document.addEventListener('DOMContentLoaded', () => {

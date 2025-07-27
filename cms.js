@@ -27,14 +27,12 @@ class PortfolioCMS {
     parseMarkdownContent(markdown) {
         const content = {};
         const sections = markdown.split('## ');
-        
+
         for (const section of sections) {
             if (!section.trim()) continue;
-            
+
             const lines = section.split('\n');
             const sectionTitle = lines[0].replace(/🔧|🏠|📄|🧑‍🎓|📧|🦶|🧭/g, '').trim();
-            
-            // Parse YAML-like content
             const yamlContent = this.extractYamlFromSection(section);
             
             switch (sectionTitle) {
@@ -46,166 +44,39 @@ class PortfolioCMS {
                     break;
                 case 'Resume Section':
                     content.resume = yamlContent;
-                    // Parse resume items
-                    content.resume.items = this.parseResumeItems(section);
                     break;
                 case 'About Section':
                     content.about = yamlContent;
                     break;
                 case 'Contact Section':
                     content.contact = yamlContent;
-                    // Parse contact methods and social links
-                    content.contact.methods = this.parseContactMethods(section);
-                    content.contact.social = this.parseSocialLinks(section);
                     break;
                 case 'Footer':
                     content.footer = yamlContent;
                     break;
                 case 'Navigation':
-                    content.navigation = this.parseNavigation(section);
+                    content.navigation = yamlContent.navigation;
                     break;
             }
         }
-        
         return content;
     }
 
     extractYamlFromSection(section) {
         const yamlBlocks = section.match(/```yaml\n([\s\S]*?)\n```/g);
         if (!yamlBlocks) return {};
-        
-        const result = {};
+
+        let result = {};
         for (const block of yamlBlocks) {
             const yamlContent = block.replace(/```yaml\n|\n```/g, '');
-            const parsed = this.parseSimpleYaml(yamlContent);
-            Object.assign(result, parsed);
+            try {
+                const parsed = jsyaml.load(yamlContent);
+                result = { ...result, ...parsed };
+            } catch (e) {
+                console.error('Error parsing YAML:', e);
+            }
         }
         return result;
-    }
-
-    parseSimpleYaml(yamlString) {
-        const result = {};
-        const lines = yamlString.split('\n');
-        let currentKey = '';
-        let isMultiline = false;
-        let multilineContent = '';
-        
-        for (const line of lines) {
-            const trimmed = line.trim();
-            if (!trimmed) continue;
-            
-            if (trimmed.endsWith('|')) {
-                currentKey = trimmed.split(':')[0].trim();
-                isMultiline = true;
-                multilineContent = '';
-                continue;
-            }
-            
-            if (isMultiline) {
-                if (line.startsWith('  ')) {
-                    multilineContent += line.substring(2) + '\n';
-                } else {
-                    result[currentKey] = multilineContent.trim();
-                    isMultiline = false;
-                }
-                continue;
-            }
-            
-            if (trimmed.includes(':')) {
-                const [key, ...valueParts] = trimmed.split(':');
-                const value = valueParts.join(':').trim().replace(/"/g, '');
-                result[key.trim()] = value;
-            }
-        }
-        
-        if (isMultiline) {
-            result[currentKey] = multilineContent.trim();
-        }
-        
-        return result;
-    }
-
-    parseResumeItems(section) {
-        const items = [];
-        const itemBlocks = section.split('- id:').slice(1);
-        
-        for (const block of itemBlocks) {
-            const item = {};
-            const lines = block.split('\n');
-            
-            for (const line of lines) {
-                const trimmed = line.trim();
-                if (trimmed.includes(':')) {
-                    const [key, ...valueParts] = trimmed.split(':');
-                    const value = valueParts.join(':').trim().replace(/"/g, '');
-                    item[key.trim()] = value === 'true' ? true : value === 'false' ? false : value;
-                }
-            }
-            
-            if (item.id) {
-                items.push(item);
-            }
-        }
-        
-        return items;
-    }
-
-    parseContactMethods(section) {
-        const methods = [];
-        const methodsMatch = section.match(/contact_methods:\s*([\s\S]*?)(?=social_links:|$)/);
-        if (!methodsMatch) return methods;
-        
-        const methodBlocks = methodsMatch[1].split('- id:').slice(1);
-        for (const block of methodBlocks) {
-            const method = this.parseYamlBlock(block);
-            if (method.id) methods.push(method);
-        }
-        
-        return methods;
-    }
-
-    parseSocialLinks(section) {
-        const links = [];
-        const linksMatch = section.match(/social_links:\s*([\s\S]*?)$/);
-        if (!linksMatch) return links;
-        
-        const linkBlocks = linksMatch[1].split('- id:').slice(1);
-        for (const block of linkBlocks) {
-            const link = this.parseYamlBlock(block);
-            if (link.id) links.push(link);
-        }
-        
-        return links;
-    }
-
-    parseNavigation(section) {
-        const nav = [];
-        const navMatch = section.match(/navigation:\s*([\s\S]*?)$/);
-        if (!navMatch) return nav;
-        
-        const navBlocks = navMatch[1].split('- id:').slice(1);
-        for (const block of navBlocks) {
-            const item = this.parseYamlBlock(block);
-            if (item.id) nav.push(item);
-        }
-        
-        return nav;
-    }
-
-    parseYamlBlock(block) {
-        const item = {};
-        const lines = block.split('\n');
-        
-        for (const line of lines) {
-            const trimmed = line.trim();
-            if (trimmed.includes(':')) {
-                const [key, ...valueParts] = trimmed.split(':');
-                const value = valueParts.join(':').trim().replace(/"/g, '');
-                item[key.trim()] = value === 'true' ? true : value === 'false' ? false : value;
-            }
-        }
-        
-        return item;
     }
 
     getFallbackContent() {
@@ -221,7 +92,7 @@ class PortfolioCMS {
             },
             resume: {
                 section_title: "📄 Resume",
-                items: [
+                resume_items: [
                     {
                         id: "libertyloft",
                         title: "🏛️ LibertyLoft",
@@ -231,6 +102,11 @@ class PortfolioCMS {
                         visible: true
                     }
                 ]
+            },
+            contact: {
+                section_title: "📧 Get In Touch",
+                contact_methods: [],
+                social_links: []
             }
         };
     }
@@ -270,7 +146,25 @@ class PortfolioCMS {
                 .join('');
             
             desktopNav.innerHTML = navHTML;
-            mobileNav.innerHTML = navHTML.replace(/class="[^"]*"/g, 'class="hover:text-apple-gray-600 transition-colors"');
+            mobileNav.innerHTML = navHTML;
+
+            // Re-add event listeners for smooth scrolling
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        const offset = 80; // Account for fixed header
+                        const targetPosition = target.offsetTop - offset;
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                    // Close mobile menu if open
+                    document.getElementById('mobile-menu').classList.add('hidden');
+                });
+            });
         }
     }
 
@@ -302,8 +196,8 @@ class PortfolioCMS {
             titleEl.textContent = this.content.resume.section_title;
         }
         
-        if (containerEl && this.content.resume.items) {
-            const itemsHTML = this.content.resume.items
+        if (containerEl && this.content.resume.resume_items) {
+            const itemsHTML = this.content.resume.resume_items
                 .filter(item => item.visible)
                 .map(item => this.createResumeItemHTML(item))
                 .join('');
@@ -362,16 +256,16 @@ class PortfolioCMS {
             titleEl.textContent = this.content.contact.section_title;
         }
         
-        if (methodsEl && this.content.contact.methods) {
-            const methodsHTML = this.content.contact.methods
+        if (methodsEl && this.content.contact.contact_methods) {
+            const methodsHTML = this.content.contact.contact_methods
                 .filter(method => method.visible)
                 .map(method => this.createContactMethodHTML(method))
                 .join('');
             methodsEl.innerHTML = methodsHTML;
         }
         
-        if (socialEl && this.content.contact.social) {
-            const socialHTML = this.content.contact.social
+        if (socialEl && this.content.contact.social_links) {
+            const socialHTML = this.content.contact.social_links
                 .filter(social => social.visible)
                 .map(social => this.createSocialLinkHTML(social))
                 .join('');
@@ -422,10 +316,11 @@ class PortfolioCMS {
 
     setupEventListeners() {
         // Listen for content changes
-        document.addEventListener('contentUpdated', () => {
+        document.addEventListener('contentUpdated', (e) => {
+            this.content = e.detail;
             this.renderContent();
         });
-        
+
         // Admin mode toggle
         document.addEventListener('keydown', (e) => {
             if (e.ctrlKey && e.shiftKey && e.key === 'A') {
@@ -472,7 +367,7 @@ class PortfolioCMS {
 
     // Method to update content and refresh display
     updateContent(newContent) {
-        this.content = { ...this.content, ...newContent };
+        this.content = newContent;
         this.renderContent();
         
         // Trigger animations for new elements
@@ -481,22 +376,6 @@ class PortfolioCMS {
                 el.classList.add('visible');
             });
         }, 100);
-    }
-
-    // Export content as markdown
-    exportToMarkdown() {
-        // Implementation for exporting current content state back to markdown format
-        return this.contentToMarkdown(this.content);
-    }
-
-    contentToMarkdown(content) {
-        // Convert content object back to markdown format
-        // This would be the reverse of parseMarkdownContent
-        let markdown = '# Samuel Paluba Portfolio - Content Management\n\n';
-        
-        // Implementation would go here to convert content object back to markdown
-        // For now, return a basic structure
-        return markdown;
     }
 }
 
