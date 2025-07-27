@@ -1,40 +1,4 @@
 // Samuel Paluba Portfolio - Content Management System
-
-// Simple YAML Parser (for this specific use case)
-function parseSimpleYaml(yamlString) {
-    const result = {};
-    const lines = yamlString.split('\n');
-    let currentKey = '';
-    let isMultiline = false;
-    let multilineContent = '';
-
-    for (const line of lines) {
-        const trimmed = line.trim();
-        if (!trimmed) continue;
-
-        if (trimmed.endsWith(':') && !trimmed.startsWith('-')) {
-            currentKey = trimmed.slice(0, -1).trim();
-            result[currentKey] = [];
-        } else if (trimmed.startsWith('- ')) {
-            const item = {};
-            const itemLines = trimmed.substring(2).split(', ');
-            itemLines.forEach(itemLine => {
-                const [key, ...valueParts] = itemLine.split(':');
-                const value = valueParts.join(':').trim().replace(/"/g, '');
-                item[key.trim()] = value === 'true' ? true : value === 'false' ? false : value;
-            });
-            if (currentKey) {
-                result[currentKey].push(item);
-            }
-        } else if (trimmed.includes(':')) {
-            const [key, ...valueParts] = trimmed.split(':');
-            const value = valueParts.join(':').trim().replace(/"/g, '');
-            result[key.trim()] = value;
-        }
-    }
-
-    return result;
-}
 class PortfolioCMS {
     constructor() {
         this.content = {};
@@ -80,27 +44,21 @@ class PortfolioCMS {
                     break;
                 case 'Resume Section':
                     content.resume = yamlContent;
-                    // The resume items are now parsed within extractYamlFromSection
                     break;
                 case 'About Section':
                     content.about = yamlContent;
                     break;
                 case 'Contact Section':
-                    content.contact = {};
-                    const contactYaml = this.extractYamlFromSection(section);
-                    content.contact.section_title = contactYaml.section_title;
-                    content.contact.methods = this.parseContactMethods(section);
-                    content.contact.social = this.parseSocialLinks(section);
+                    content.contact = yamlContent;
                     break;
                 case 'Footer':
                     content.footer = yamlContent;
                     break;
                 case 'Navigation':
-                    content.navigation = this.parseNavigation(section);
+                    content.navigation = yamlContent.navigation;
                     break;
             }
         }
-
         return content;
     }
 
@@ -111,139 +69,14 @@ class PortfolioCMS {
         let result = {};
         for (const block of yamlBlocks) {
             const yamlContent = block.replace(/```yaml\n|\n```/g, '');
-            const parsed = this.parseSimpleYaml(yamlContent.trim());
-            result = { ...result, ...parsed };
-        }
-        return result;
-    }
-
-    parseSimpleYaml(yamlString) {
-        const result = {};
-        const lines = yamlString.split('\n');
-        let currentKey = '';
-        let isMultiline = false;
-        let multilineContent = '';
-        let currentArrayName = null;
-
-        for (const line of lines) {
-            const trimmed = line.trim();
-            if (!trimmed) continue;
-
-            if (trimmed.endsWith(':') && !line.startsWith('  ')) {
-                currentArrayName = trimmed.slice(0, -1);
-                result[currentArrayName] = [];
-                continue;
-            }
-
-            if (trimmed.startsWith('- id:')) {
-                const item = {};
-                const itemContent = trimmed.substring(2);
-                const properties = itemContent.split(', ');
-                properties.forEach(prop => {
-                    const [key, ...valueParts] = prop.split(':');
-                    const value = valueParts.join(':').trim().replace(/"/g, '');
-                    item[key.trim()] = value;
-                });
-
-                if (currentArrayName) {
-                    // This is a simplified parser, so we'll assume the next lines are part of this item
-                    const itemLines = lines.slice(lines.indexOf(line) + 1);
-                    for (const itemLine of itemLines) {
-                        const itemTrimmed = itemLine.trim();
-                        if (itemTrimmed.startsWith('- id:')) break;
-                        if (itemTrimmed.includes(':')) {
-                            const [key, ...valueParts] = itemTrimmed.split(':');
-                            const value = valueParts.join(':').trim().replace(/"/g, '');
-                            item[key.trim()] = value;
-                        }
-                    }
-                    result[currentArrayName].push(item);
-                }
-                continue;
-            }
-
-
-            if (trimmed.includes(':')) {
-                const [key, ...valueParts] = trimmed.split(':');
-                const value = valueParts.join(':').trim().replace(/"/g, '');
-                result[key.trim()] = value;
+            try {
+                const parsed = jsyaml.load(yamlContent);
+                result = { ...result, ...parsed };
+            } catch (e) {
+                console.error('Error parsing YAML:', e);
             }
         }
         return result;
-    }
-
-
-    parseResumeItems(section) {
-        const items = [];
-        const itemsMatch = section.match(/resume_items:\s*([\s\S]*?)(?=\n## |$)/);
-        if (!itemsMatch) return items;
-
-        const itemBlocks = itemsMatch[1].split('- id:').slice(1);
-        for (const block of itemBlocks) {
-            const item = this.parseYamlBlock(block);
-            if (item.id) {
-                items.push(item);
-            }
-        }
-        return items;
-    }
-
-    parseContactMethods(section) {
-        const methods = [];
-        const methodsMatch = section.match(/contact_methods:\s*([\s\S]*?)(?=social_links:|$)/);
-        if (!methodsMatch) return methods;
-
-        const methodBlocks = methodsMatch[1].split('- id:').slice(1);
-        for (const block of methodBlocks) {
-            const method = this.parseYamlBlock(block);
-            if (method.id) methods.push(method);
-        }
-
-        return methods;
-    }
-
-    parseSocialLinks(section) {
-        const links = [];
-        const linksMatch = section.match(/social_links:\s*([\s\S]*?)$/);
-        if (!linksMatch) return links;
-
-        const linkBlocks = linksMatch[1].split('- id:').slice(1);
-        for (const block of linkBlocks) {
-            const link = this.parseYamlBlock(block);
-            if (link.id) links.push(link);
-        }
-
-        return links;
-    }
-
-    parseNavigation(section) {
-        const nav = [];
-        const navMatch = section.match(/navigation:\s*([\s\S]*?)$/);
-        if (!navMatch) return nav;
-
-        const navBlocks = navMatch[1].split('- id:').slice(1);
-        for (const block of navBlocks) {
-            const item = this.parseYamlBlock(block);
-            if (item.id) nav.push(item);
-        }
-
-        return nav;
-    }
-
-    parseYamlBlock(block) {
-        const item = {};
-        const lines = block.split('\n');
-
-        for (const line of lines) {
-            const trimmed = line.trim();
-            if (trimmed.includes(':')) {
-                const [key, ...valueParts] = trimmed.split(':');
-                const value = valueParts.join(':').trim().replace(/"/g, '').replace(/,$/, '');
-                item[key.trim()] = value === 'true' ? true : value === 'false' ? false : value;
-            }
-        }
-
-        return item;
     }
 
     getFallbackContent() {
@@ -259,7 +92,7 @@ class PortfolioCMS {
             },
             resume: {
                 section_title: "📄 Resume",
-                items: [
+                resume_items: [
                     {
                         id: "libertyloft",
                         title: "🏛️ LibertyLoft",
@@ -269,6 +102,11 @@ class PortfolioCMS {
                         visible: true
                     }
                 ]
+            },
+            contact: {
+                section_title: "📧 Get In Touch",
+                contact_methods: [],
+                social_links: []
             }
         };
     }
@@ -308,7 +146,25 @@ class PortfolioCMS {
                 .join('');
 
             desktopNav.innerHTML = navHTML;
-            mobileNav.innerHTML = navHTML.replace(/class="[^"]*"/g, 'class="hover:text-apple-gray-600 transition-colors"');
+            mobileNav.innerHTML = navHTML;
+
+            // Re-add event listeners for smooth scrolling
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        const offset = 80; // Account for fixed header
+                        const targetPosition = target.offsetTop - offset;
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                    // Close mobile menu if open
+                    document.getElementById('mobile-menu').classList.add('hidden');
+                });
+            });
         }
     }
 
@@ -400,16 +256,16 @@ class PortfolioCMS {
             titleEl.textContent = this.content.contact.section_title;
         }
 
-        if (methodsEl && this.content.contact.methods) {
-            const methodsHTML = this.content.contact.methods
+        if (methodsEl && this.content.contact.contact_methods) {
+            const methodsHTML = this.content.contact.contact_methods
                 .filter(method => method.visible)
                 .map(method => this.createContactMethodHTML(method))
                 .join('');
             methodsEl.innerHTML = methodsHTML;
         }
 
-        if (socialEl && this.content.contact.social) {
-            const socialHTML = this.content.contact.social
+        if (socialEl && this.content.contact.social_links) {
+            const socialHTML = this.content.contact.social_links
                 .filter(social => social.visible)
                 .map(social => this.createSocialLinkHTML(social))
                 .join('');
@@ -520,22 +376,6 @@ class PortfolioCMS {
                 el.classList.add('visible');
             });
         }, 100);
-    }
-
-    // Export content as markdown
-    exportToMarkdown() {
-        // Implementation for exporting current content state back to markdown format
-        return this.contentToMarkdown(this.content);
-    }
-
-    contentToMarkdown(content) {
-        // Convert content object back to markdown format
-        // This would be the reverse of parseMarkdownContent
-        let markdown = '# Samuel Paluba Portfolio - Content Management\n\n';
-
-        // Implementation would go here to convert content object back to markdown
-        // For now, return a basic structure
-        return markdown;
     }
 }
 

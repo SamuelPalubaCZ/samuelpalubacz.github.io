@@ -259,26 +259,26 @@ class AdminPanel {
         const methodsContainer = container.querySelector('#contact-methods-list');
         const socialContainer = container.querySelector('#social-links-list');
 
-        if (this.cms.content.contact?.methods) {
-            this.cms.content.contact.methods.forEach((item, index) => {
+        if (this.cms.content.contact?.contact_methods) {
+            this.cms.content.contact.contact_methods.forEach((item, index) => {
                 const fields = [
                     { id: 'title', label: 'Title', type: 'text' },
                     { id: 'description', label: 'Description', type: 'text' },
                     { id: 'link', label: 'Link', type: 'url' },
                     { id: 'visible', label: 'Visible', type: 'checkbox' },
                 ];
-                methodsContainer.appendChild(this.createEditorField(item, index, fields, 'contact', 'methods'));
+                methodsContainer.appendChild(this.createEditorField(item, index, fields, 'contact', 'contact_methods'));
             });
         }
 
-        if (this.cms.content.contact?.social) {
-            this.cms.content.contact.social.forEach((item, index) => {
+        if (this.cms.content.contact?.social_links) {
+            this.cms.content.contact.social_links.forEach((item, index) => {
                 const fields = [
                     { id: 'platform', label: 'Platform', type: 'text' },
                     { id: 'url', label: 'URL', type: 'url' },
                     { id: 'visible', label: 'Visible', type: 'checkbox' },
                 ];
-                socialContainer.appendChild(this.createEditorField(item, index, fields, 'contact', 'social'));
+                socialContainer.appendChild(this.createEditorField(item, index, fields, 'contact', 'social_links'));
             });
         }
     }
@@ -319,87 +319,43 @@ class AdminPanel {
 
         if (site) {
             md += '## 🔧 Site Configuration\n```yaml\n';
-            md += `site_title: "${site.site_title}"\n`;
-            md += `name: "${site.name}"\n`;
+            md += jsyaml.dump(site);
             md += '```\n\n';
         }
 
         if (hero) {
             md += '## 🏠 Hero Section\n```yaml\n';
-            md += `hero_greeting: "${hero.hero_greeting}"\n`;
-            md += `hero_intro: "${hero.hero_intro}"\n`;
-            md += `cta_button: "${hero.cta_button}"\n`;
-            md += `cta_target: "${hero.cta_target}"\n`;
+            md += jsyaml.dump(hero);
             md += '```\n\n';
         }
 
         if (resume) {
             md += '## 📄 Resume Section\n```yaml\n';
-            md += `section_title: "${resume.section_title}"\n`;
-            md += '```\n\n';
-            md += '### Resume Items\n```yaml\n';
-            md += 'resume_items:\n';
-            resume.resume_items.forEach(item => {
-                md += `  - id: "${item.id}"\n`;
-                md += `    title: "${item.title}"\n`;
-                md += `    description: "${item.description}"\n`;
-                md += `    type: "${item.type}"\n`;
-                md += `    status: "${item.status}"\n`;
-                md += `    status_text: "${item.status_text}"\n`;
-                md += `    link: "${item.link}"\n`;
-                md += `    visible: ${item.visible}\n\n`;
-            });
+            md += jsyaml.dump(resume);
             md += '```\n\n';
         }
 
         if (about) {
             md += '## 🧑‍🎓 About Section\n```yaml\n';
-            md += `section_title: "${about.section_title}"\n`;
-            md += `show_personal_header: ${about.show_personal_header}\n`;
-            md += `personal_content: |\n  ${about.personal_content.replace(/\n/g, '\n  ')}\n`;
+            md += jsyaml.dump(about);
             md += '```\n\n';
         }
 
         if (contact) {
             md += '## 📧 Contact Section\n```yaml\n';
-            md += `section_title: "${contact.section_title}"\n`;
-            md += '```\n\n';
-            md += '### Contact Methods\n```yaml\n';
-            md += 'contact_methods:\n';
-            contact.methods.forEach(method => {
-                md += `  - id: "${method.id}"\n`;
-                md += `    title: "${method.title}"\n`;
-                md += `    description: "${method.description}"\n`;
-                md += `    link: "${method.link}"\n`;
-                md += `    visible: ${method.visible}\n\n`;
-            });
-            md += '```\n\n';
-            md += '### Social Media\n```yaml\n';
-            md += 'social_links:\n';
-            contact.social.forEach(social => {
-                md += `  - id: "${social.id}"\n`;
-                md += `    platform: "${social.platform}"\n`;
-                md += `    url: "${social.url}"\n`;
-                md += `    visible: ${social.visible}\n\n`;
-            });
+            md += jsyaml.dump(contact);
             md += '```\n\n';
         }
 
         if (footer) {
             md += '## 🦶 Footer\n```yaml\n';
-            md += `footer_text: "${footer.footer_text}"\n`;
+            md += jsyaml.dump(footer);
             md += '```\n\n';
         }
 
         if (navigation) {
             md += '## 🧭 Navigation\n```yaml\n';
-            md += 'navigation:\n';
-            navigation.forEach(item => {
-                md += `  - id: "${item.id}"\n`;
-                md += `    title: "${item.title}"\n`;
-                md += `    target: "${item.target}"\n`;
-                md += `    visible: ${item.visible}\n\n`;
-            });
+            md += jsyaml.dump({ navigation: navigation });
             md += '```\n\n';
         }
 
@@ -444,59 +400,6 @@ class AdminPanel {
         }
     }
 }
-
-// CSS Styles for Admin Panel
-const adminStyles = `
-<style>
-    .admin-container {
-        font-family: 'JetBrains Mono', monospace;
-    }
-    
-    .tab-btn.active {
-        background-color: white;
-        border-bottom: 2px solid #1f2937;
-    }
-    
-    .tab-btn:not(.active) {
-        background-color: #f3f4f6;
-        color: #6b7280;
-    }
-    
-    .tab-btn:not(.active):hover {
-        background-color: #e5e7eb;
-        color: #374151;
-    }
-    
-    .form-group label {
-        color: #374151;
-        font-weight: 500;
-    }
-    
-    .form-group input,
-    .form-group textarea {
-        border: 1px solid #d1d5db;
-        font-family: 'JetBrains Mono', monospace;
-    }
-    
-    .form-group input:focus,
-    .form-group textarea:focus {
-        outline: none;
-        border-color: #1f2937;
-        box-shadow: 0 0 0 3px rgba(31, 41, 55, 0.1);
-    }
-    
-    .editor-item {
-        transition: all 0.3s ease;
-    }
-    
-    .editor-item:hover {
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-</style>
-`;
-
-// Inject admin styles
-document.head.insertAdjacentHTML('beforeend', adminStyles);
 
 // Initialize admin panel when CMS is ready
 document.addEventListener('DOMContentLoaded', () => {
