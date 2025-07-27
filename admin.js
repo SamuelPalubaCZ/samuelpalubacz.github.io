@@ -174,6 +174,7 @@ class AdminPanel {
         const heroIntroInput = document.getElementById('hero-intro-input');
         const ctaButtonInput = document.getElementById('cta-button');
         const aboutContentInput = document.getElementById('about-content-input');
+        const footerTextInput = document.getElementById('footer-text-input');
 
         if (heroGreetingInput) {
             heroGreetingInput.addEventListener('input', (e) => {
@@ -196,6 +197,12 @@ class AdminPanel {
         if (aboutContentInput) {
             aboutContentInput.addEventListener('input', (e) => {
                 this.updateContent('about', 'personal_content', e.target.value);
+            });
+        }
+
+        if (footerTextInput) {
+            footerTextInput.addEventListener('input', (e) => {
+                this.updateContent('footer', 'footer_text', e.target.value);
             });
         }
     }

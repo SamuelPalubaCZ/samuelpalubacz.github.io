@@ -80,19 +80,19 @@ contact_methods:
   - id: "email"
     title: "📧 Email"
     description: "Professional inquiries"
-    link: "mailto:samuel@example.com"
+    link: "mailto:samuel@paluba.me"
     visible: true
     
   - id: "signal"
     title: "🔐 Signal"
     description: "Secure messaging"
-    link: "https://signal.me/#p/+1234567890"
+    link: "https://signal.me/#p/+420795495137"
     visible: true
     
   - id: "whatsapp"
     title: "💬 WhatsApp"
     description: "Quick communication"
-    link: "https://wa.me/1234567890"
+    link: "https://wa.me/+420728981602"
     visible: true
 ```
 
