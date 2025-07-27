@@ -34,7 +34,7 @@ class PortfolioCMS {
             const lines = section.split('\n');
             const sectionTitle = lines[0].replace(/🔧|🏠|📄|🧑‍🎓|📧|🦶|🧭/g, '').trim();
             const yamlContent = this.extractYamlFromSection(section);
-            
+
             switch (sectionTitle) {
                 case 'Site Configuration':
                     content.site = yamlContent;
@@ -135,16 +135,16 @@ class PortfolioCMS {
 
     renderNavigation() {
         if (!this.content.navigation) return;
-        
+
         const desktopNav = document.querySelector('#desktop-nav');
         const mobileNav = document.querySelector('#mobile-nav');
-        
+
         if (desktopNav && mobileNav) {
             const navHTML = this.content.navigation
                 .filter(item => item.visible)
                 .map(item => `<a href="${item.target}" class="hover:text-apple-gray-600 transition-colors">${item.title}</a>`)
                 .join('');
-            
+
             desktopNav.innerHTML = navHTML;
             mobileNav.innerHTML = navHTML;
 
@@ -170,11 +170,11 @@ class PortfolioCMS {
 
     renderHero() {
         if (!this.content.hero) return;
-        
+
         const greetingEl = document.querySelector('#hero-greeting');
         const introEl = document.querySelector('#hero-intro');
         const ctaEl = document.querySelector('#hero-cta');
-        
+
         if (greetingEl && this.content.hero.hero_greeting) {
             greetingEl.innerHTML = this.content.hero.hero_greeting;
         }
@@ -188,27 +188,27 @@ class PortfolioCMS {
 
     renderResume() {
         if (!this.content.resume) return;
-        
+
         const titleEl = document.querySelector('#resume-title');
         const containerEl = document.querySelector('#resume-container');
-        
+
         if (titleEl && this.content.resume.section_title) {
             titleEl.textContent = this.content.resume.section_title;
         }
-        
+
         if (containerEl && this.content.resume.resume_items) {
             const itemsHTML = this.content.resume.resume_items
                 .filter(item => item.visible)
                 .map(item => this.createResumeItemHTML(item))
                 .join('');
-            
+
             containerEl.innerHTML = itemsHTML;
         }
     }
 
     createResumeItemHTML(item) {
         const hasLink = item.link && item.link.trim() !== '';
-        const linkHTML = hasLink 
+        const linkHTML = hasLink
             ? `<a href="${item.link}" target="_blank" class="inline-flex items-center text-apple-gray-900 hover:text-apple-gray-600 transition-colors">
                 ${item.status_text}
                 <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -228,14 +228,14 @@ class PortfolioCMS {
 
     renderAbout() {
         if (!this.content.about) return;
-        
+
         const titleEl = document.querySelector('#about-title');
         const contentEl = document.querySelector('#about-content');
-        
+
         if (titleEl && this.content.about.section_title) {
             titleEl.textContent = this.content.about.section_title;
         }
-        
+
         if (contentEl && this.content.about.personal_content) {
             const paragraphs = this.content.about.personal_content.split('\n\n');
             const contentHTML = paragraphs
@@ -247,15 +247,15 @@ class PortfolioCMS {
 
     renderContact() {
         if (!this.content.contact) return;
-        
+
         const titleEl = document.querySelector('#contact-title');
         const methodsEl = document.querySelector('#contact-methods');
         const socialEl = document.querySelector('#social-links');
-        
+
         if (titleEl && this.content.contact.section_title) {
             titleEl.textContent = this.content.contact.section_title;
         }
-        
+
         if (methodsEl && this.content.contact.contact_methods) {
             const methodsHTML = this.content.contact.contact_methods
                 .filter(method => method.visible)
@@ -263,7 +263,7 @@ class PortfolioCMS {
                 .join('');
             methodsEl.innerHTML = methodsHTML;
         }
-        
+
         if (socialEl && this.content.contact.social_links) {
             const socialHTML = this.content.contact.social_links
                 .filter(social => social.visible)
@@ -278,7 +278,7 @@ class PortfolioCMS {
         const element = hasLink ? 'a' : 'div';
         const linkAttr = hasLink ? `href="${method.link}" target="_blank"` : '';
         const hoverClass = hasLink ? 'hover:shadow-md transition-shadow cursor-pointer' : '';
-        
+
         return `
             <${element} ${linkAttr} class="bg-white rounded-xl p-6 shadow-sm border border-apple-gray-200 fade-in ${hoverClass}">
                 <h3 class="font-semibold mb-2">${method.title}</h3>
@@ -307,7 +307,7 @@ class PortfolioCMS {
 
     renderFooter() {
         if (!this.content.footer) return;
-        
+
         const footerEl = document.querySelector('#footer-text');
         if (footerEl && this.content.footer.footer_text) {
             footerEl.textContent = this.content.footer.footer_text;
@@ -369,7 +369,7 @@ class PortfolioCMS {
     updateContent(newContent) {
         this.content = newContent;
         this.renderContent();
-        
+
         // Trigger animations for new elements
         setTimeout(() => {
             document.querySelectorAll('.fade-in').forEach(el => {
