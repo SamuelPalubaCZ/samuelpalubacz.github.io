@@ -13,6 +13,7 @@ I’m deeply passionate about technology, individual freedom, and the potential 
 ---
 
 ## 🚀 Projects
+---
 
 ### 🗽 **[LibertyLoft](https://LibertyLoft.cz)**
 
