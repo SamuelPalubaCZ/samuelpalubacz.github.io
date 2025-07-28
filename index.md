@@ -6,10 +6,8 @@ I’m deeply passionate about technology, individual freedom, and the potential 
 
 ---
 💻 **IT** • 🏛 **Politics** • 🔗 **Decentralization** • 📷 **Photography** • 📈 **Economics**
----
 
 # 🚀 Projects
----
 
 ## 🗽 **[LibertyLoft](https://LibertyLoft.cz)**
 
@@ -21,7 +19,6 @@ LibertyLoft is a new community center in Prague dedicated to uniting libertarian
 
 Open to anyone passionate about freedom, collaboration, and new ideas.
 
----
 
 ## 🖥 **ThinkHome**
 
@@ -32,7 +29,6 @@ ThinkHome was a company I co-founded with a few partners. Our goal:
 
 *Currently on hold*, but I’m still providing similar services independently. Reach out if you need anything!
 
----
 
 ## 🎓 **Students for Liberty (SFL)**
 
@@ -44,7 +40,6 @@ ThinkHome was a company I co-founded with a few partners. Our goal:
 
 I joined SFL in late 2023 and have been a **Local Coordinator** since early 2025.
 
----
 
 ## 📸 **Photography**
 
@@ -62,5 +57,4 @@ One of my hobbies is photography. While not a pro, I love capturing moments. **[
 [![WhatsApp](https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](#)
 
 ---
-
 © 2025 **Samuel Paluba**
