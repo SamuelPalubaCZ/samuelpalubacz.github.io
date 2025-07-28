@@ -1,10 +1,10 @@
-name: Xlog Advanced Build & Deploy
+name: Xlog
 
 on:
   push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 permissions:
@@ -16,57 +16,48 @@ concurrency:
   group: "pages"
   cancel-in-progress: true
 
-env:
-  XLOG_VERSION: v1.7.9
-  SITE_DOMAIN: samuel.paluba.me
-  SITE_NAME: Samuel Paluba
-  TWITTER_USERNAME: "@PalubaSamuel"
-  GITHUB_EDIT_URL: https://github.com/SamuelPalubaCZ/samuelpalubacz.github.io/edit/main
-  RSS_DESCRIPTION: "Samuel Paluba - IT, Politics, Decentralization & Photography"
-
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
-      - name: 🔄 Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 🛠️ Configure Git for non-ASCII characters
-        run: |
-          git config core.quotepath true
+      - name: Allow non-ASCII character
+        run: git config core.quotepath false
 
-      - name: ⏰ Restore file timestamps
-        uses: chetan/git-restore-mtime-action@v2
+      - name: restore timestamps
+        uses: chetan/git-restore-mtime-action@v1
 
       - name: Install xlog
+        env:
+          XLOG_VERSION: v1.7.8
         run: curl --location https://github.com/emad-elsaid/xlog/releases/download/${XLOG_VERSION}/xlog-${XLOG_VERSION}-linux-amd64.tar.gz | tar -xz -C ..
-        
-      - name: 🏗️ Build site with xlog
+
+      - name: Build
         run: |
           echo "🚀 Building site with comprehensive xlog configuration..."
-          xlog \
+          ../xlog \
             --build . \
-            --sitename="${SITE_NAME}" \
+            --sitename="Samuel Paluba" \
             --theme="omit" \
             --codestyle="catppuccin-latte" \
             --index="Home" \
             --html \
-            --sitemap.domain="${SITE_DOMAIN}" \
-            --og.domain="${SITE_DOMAIN}" \
-            --twitter.username="${TWITTER_USERNAME}" \
-            --github.url="${GITHUB_EDIT_URL}" \
-            --rss.domain="${SITE_DOMAIN}" \
-            --rss.description="${RSS_DESCRIPTION}" \
+            --sitemap.domain="samuel.paluba.me" \
+            --og.domain="samuel.paluba.me" \
+            --twitter.username="PalubaSamuel" \
+            --github.url="https://github.com/SamuelPalubaCZ/samuelpalubacz.github.io/edit/main" \
+            --rss.domain="samuel.paluba.me}" \
+            --rss.description="samuel.paluba.me" \
             --copyright="© 2025 Samuel Paluba. All rights reserved." \
             --notfoundpage="404" \
             --custom.head="assets/custom-head.html" \
             --custom.before_view="assets/before-content.html" \
             --custom.after_view="assets/after-content.html" \
-            --activitypub.domain="${SITE_DOMAIN}" \
+            --activitypub.domain="samuel.paluba.me" \
             --activitypub.username="samuel" \
             --activitypub.summary="16 y.o libertarian/crypto-anarchist" \
             --activitypub.icon="/assets/profile-icon.jpg" \
@@ -74,14 +65,10 @@ jobs:
             --pandoc
             rm *.md
             chmod -R 0777 .
-          
-          echo "✅ Site built successfully"
-
-      - name: 🚀 Upload GitHub Pages artifact
+      - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v3.0.1
         with:
           path: .
-          retention-days: 30
 
   deploy:
     environment:
@@ -89,13 +76,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
-    if: github.ref == 'refs/heads/main'
-    
     steps:
-      - name: 🌐 Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
-      - name: 🎉 Deployment success notification
-        run: |
-          echo "🎉 Deployment completed successfully!"
