@@ -42,27 +42,17 @@ jobs:
           ../xlog \
             --build . \
             --sitename="Samuel Paluba" \
-            --theme="omit" \
-            --codestyle="catppuccin-latte" \
+            --theme="light" \
+            --codestyle="xcode" \
             --index="Home" \
-            --html \
-            --sitemap.domain="samuel.paluba.me" \
             --og.domain="samuel.paluba.me" \
-            --twitter.username="PalubaSamuel" \
+            --twitter.username="@PalubaSamuel" \
             --github.url="https://github.com/SamuelPalubaCZ/samuelpalubacz.github.io/edit/main" \
-            --rss.domain="samuel.paluba.me}" \
+            --rss.domain="samuel.paluba.me" \
             --rss.description="samuel.paluba.me" \
-            --copyright="© 2025 Samuel Paluba. All rights reserved." \
-            --notfoundpage="404" \
-            --custom.head="assets/custom-head.html" \
-            --custom.before_view="assets/before-content.html" \
-            --custom.after_view="assets/after-content.html" \
             --activitypub.domain="samuel.paluba.me" \
             --activitypub.username="samuel" \
             --activitypub.summary="16 y.o libertarian/crypto-anarchist" \
-            --activitypub.icon="/assets/profile-icon.jpg" \
-            --activitypub.image="/assets/profile-cover.jpg" \
-            --pandoc
             rm *.md
             chmod -R 0777 .
       - name: Upload GitHub Pages artifact
