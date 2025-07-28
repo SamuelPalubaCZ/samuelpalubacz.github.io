@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en"  data-theme="light">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <link rel="icon" href="/public/logo.png">
+    <link rel="stylesheet" href="/public/style.css">
+    <title>
+      
+         Calendar 
+        |
+      Samuel Paluba
+    </title> <link href="/+/feed.rss" rel="alternate" title="Samuel Paluba" type="application/rss+xml"><link rel="stylesheet" href="/public/blocks.css"><link rel="manifest" href="/manifest.json">
+    <meta property="og:site_name" content="Samuel Paluba" />
+    <meta property="og:title" content="Calendar" />
+    <meta property="og:description" content="" />
+    <meta property="og:image" content="" />
+    <meta property="og:url" content="https://samuel.paluba.me/Calendar" />
+    <meta property="og:type" content="website" />
+
+    <meta name="twitter:title" content="Calendar" />
+    <meta name="twitter:description" content="" />
+    <meta name="twitter:image" content="" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:creator" content="@PalubaSamuel" />
+    <meta name="twitter:site" content="@PalubaSamuel" />
+    <meta name="twitter:image:alt" content="Calendar" />
+
+    <meta name="description" content="">
+ </head>
+  <body>
+<nav class="navbar my-5" role="navigation" aria-label="main navigation">
+  <div class="container is-max-desktop px-3" dir="auto">
+  <div class="navbar-brand">
+    <a class="icon-text navbar-item" href="/">
+      <span class="icon is-large"><img alt="logo" src="/public/logo.png"/></span>
+      <span class="has-text-weight-bold">Samuel Paluba</span>
+    </a>
+
+    <a role="button"
+       class="navbar-burger"
+       aria-label="menu"
+       aria-expanded="false"
+       onclick="this.classList.toggle('is-active');document.getElementById('navbarMenu').classList.toggle('is-active')">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+
+  <div id="navbarMenu" class="navbar-menu">
+    <div class="navbar-start"><a href="/&#43;/calendar"  class="navbar-item icon-text">
+        
+        <span class="icon">
+          <i class="fa-regular fa-calendar-days"></i> 
+        </span>
+        
+        <span>Calendar</span>
+      </a><a href="/&#43;/recent"  class="navbar-item icon-text">
+        
+        <span class="icon">
+          <i class="fa-solid fa-clock-rotate-left"></i> 
+        </span>
+        
+        <span>Recent</span>
+      </a><a href="/&#43;/feed.rss"  class="navbar-item icon-text">
+        
+        <span class="icon">
+          <i class="fa-solid fa-rss"></i> 
+        </span>
+        
+        <span>RSS</span>
+      </a><a href="/&#43;/tags"  class="navbar-item icon-text">
+        
+        <span class="icon">
+          <i class="fa-solid fa-tags"></i> 
+        </span>
+        
+        <span>Hashtags</span>
+      </a>
+    </div>
+
+    <div class="navbar-end">
+      <div class="navbar-item"></div>
+    </div>
+  </div>
+  </div>
+</nav>
+<div class="container is-max-desktop px-3 pb-5" dir="auto"><div dir="auto" class="title is-1 has-text-weight-bold" style="view-transition-name: page-title;">
+        
+          
+          Calendar
+        </div><div class="content pb-5">
+<style>
+.calendar{
+    td,th {
+        width: calc(100%/7);
+    }
+    td{
+        height: 8em;
+        overflow: hidden;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    a .page{
+        font-size: 0.7em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        line-clamp: 1;
+        -webkit-box-orient: vertical;
+    }
+ }
+</style>
+
+
+<div class="notification is-info">
+  There are no posts that contains dates yet...
+</div>
+
+
+
+      </div>
+    </div>
+
+    <script src="/public/htmx.min.js" defer></script>
+  </body>
+</html>
