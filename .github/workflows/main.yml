@@ -17,7 +17,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  XLOG_VERSION: v1.7.8
+  XLOG_VERSION: v1.7.9
   SITE_DOMAIN: samuel.paluba.me
   SITE_NAME: Samuel Paluba
   TWITTER_USERNAME: "@PalubaSamuel"
