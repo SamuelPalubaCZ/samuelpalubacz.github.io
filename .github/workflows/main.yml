@@ -45,12 +45,12 @@ jobs:
             --theme="light" \
             --codestyle="xcode" \
             --index="Home" \
-            --og.domain="samuel.paluba.me" \
+            --og.domain="paluba.me" \
             --twitter.username="@PalubaSamuel" \
             --github.url="https://github.com/SamuelPalubaCZ/samuelpalubacz.github.io/edit/main" \
-            --rss.domain="samuel.paluba.me" \
-            --rss.description="samuel.paluba.me" \
-            --activitypub.domain="samuel.paluba.me" \
+            --rss.domain="paluba.me" \
+            --rss.description="Samuel Paluba" \
+            --activitypub.domain="paluba.me" \
             --activitypub.username="samuel" \
             --activitypub.summary="16 y.o libertarian/crypto-anarchist" \
             rm *.md
