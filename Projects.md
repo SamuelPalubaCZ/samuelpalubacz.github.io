@@ -1,40 +1,24 @@
 # 🚀 Projects
 
-### 🗽 **[LibertyLoft](https://LibertyLoft.cz)**
+## 🗽 LibertyLoft
 
-LibertyLoft is a new community center in Prague dedicated to uniting libertarians, anarcho-capitalists, and freedom-oriented individuals. Our mission is to create a vibrant space for:
+LibertyLoft is a vibrant community center in Prague, created especially for libertarians, anarcho-capitalists, and everyone passionate about freedom. It's our hub for events, inspiring discussions, sharing knowledge, and building lasting friendships. We're always welcoming new ideas and collaboration, so come join us!
 
-- Organizing events
-- Hosting discussions
-- Sharing knowledge and friendships
+👉 [Visit LibertyLoft](https://LibertyLoft.cz)
 
-Open to anyone passionate about freedom, collaboration, and new ideas.
+## 💻 ThinkHome
 
----
+ThinkHome was a company I launched with a few friends, aiming to make technology accessible to everyone. We provided hosting, web development, consulting, and personalized IT management. Right now, ThinkHome is on hold, but I'm still here, offering similar services individually. Need help with tech? Just [reach out](/contact)!
 
-### 🖥 **ThinkHome**
+## 📚 Students for Liberty
 
-ThinkHome was a company I co-founded with a few partners. Our goal:
+Students for Liberty (SFL) is an international student organization dedicated to promoting freedom through engaging events and activities. I joined SFL in late 2023 and have been serving as a Local Coordinator since early 2025.
 
-- Making IT services accessible to everyone
-- Offering hosting, website creation, consulting, and personalized IT management services
+👉 [Visit SFL Czech Website](https://studentizasvoboducz.cz)
 
-*Currently on hold*, but I’m still providing similar services independently. Reach out if you need anything!
+## 📸 Photography
 
----
+One of my favorite hobbies is photography. I'm not a professional, but I love capturing moments and sharing my perspective through photos. Curious to see my work? Check out my gallery!
 
-### 🎓 **Students for Liberty (SFL)**
+© Samuel Paluba, 2025
 
-*Students for Liberty* is an organization dedicated to spreading liberty-minded ideas through events and activities. Closely aligned with:
-
-- Classical liberalism
-- Libertarianism
-- Anarcho-capitalism
-
-I joined SFL in late 2023 and have been a **Local Coordinator** since early 2025.
-
----
-
-### 📸 **Photography**
-
-One of my hobbies is photography. While not a pro, I love capturing moments. **[Check out my photos here!](#)** *(Insert link to portfolio)*
