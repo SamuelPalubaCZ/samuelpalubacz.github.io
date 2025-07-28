@@ -1,84 +1,69 @@
----
-title: "Samuel Paluba"
-date: 2025-07-28
-description: "Personal website"
-layout: home
----
-
 # Samuel Paluba
 
-> IT, politics, decentralization, photography, and economics.
+💻 **IT** • 🏛 **Politics** • 🔗 **Decentralization** • 📷 **Photography** • 📈 **Economics**
+
+---
 
 ## About Me
 
-Hey there, I'm Samuel! I'm a 16-year-old freelancer in the IT field, a libertarian/crypto-anarchist, and I'm currently working on a project called **LibertyLoft**. I also serve as a **Local Coordinator for Students for Liberty**.
+👋 Hey there, I’m **Samuel Paluba** — a 16 y.o freelancer in the IT field, a libertarian/crypto-anarchist, and currently working on an exciting project called **LibertyLoft**. I also serve as a **Local Coordinator** for *Students for Liberty*.
 
-My beliefs center around individual freedom, economic liberty, and decentralized governance. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+I’m deeply passionate about technology, individual freedom, and the potential of decentralized systems. My work spans IT development, community organizing, and exploring the intersection of technology and liberty. When I’m not coding or organizing events, you’ll find me behind a camera.
 
 ---
 
-## Projects
+## 🚀 Projects
 
-### 🏢 LibertyLoft
+### 🗽 **[LibertyLoft](https://LibertyLoft.cz)**
 
-**LibertyLoft** is a new community center in Prague dedicated to bringing together the libertarian, anarcho-capitalist, and freedom-oriented community. Our mission is to create a vibrant space for organizing events, discussions, and sharing knowledge and friendship. It's open to anyone interested in freedom, collaboration, and new ideas.
+LibertyLoft is a new community center in Prague dedicated to uniting libertarians, anarcho-capitalists, and freedom-oriented individuals. Our mission is to create a vibrant space for:
 
-?> **Website:** [LibertyLoft.cz](https://LibertyLoft.cz)
+- Organizing events
+- Hosting discussions
+- Sharing knowledge and friendships
 
-### 💻 Thinkhome *(On Hold)*
+Open to anyone passionate about freedom, collaboration, and new ideas.
 
-**Thinkhome** was my company with a few of my partners. Our goal was to make technology accessible for everyone to use. We also offered:
+---
 
-- Hosting services
-- Website creation
-- IT consulting
-- Personalized IT management
+### 🖥 **ThinkHome**
 
-!> Unfortunately, the project is on hold right now, but I'm still doing the same things, just on a smaller scale, under my own name. Feel free to reach out if you need anything!
+ThinkHome was a company I co-founded with a few partners. Our goal:
 
-### 🎓 Students for Liberty
+- Making IT services accessible to everyone
+- Offering hosting, website creation, consulting, and personalized IT management services
 
-**Students for Liberty** is a student organization that's all about spreading their ideas through events and activities. They're like a group of freedom fighters who connect people who share their values.
+*Currently on hold*, but I’m still providing similar services independently. Reach out if you need anything!
 
-They're aligned with:
+---
+
+### 🎓 **Students for Liberty (SFL)**
+
+*Students for Liberty* is an organization dedicated to spreading liberty-minded ideas through events and activities. Closely aligned with:
+
 - Classical liberalism
-- Libertarianism  
+- Libertarianism
 - Anarcho-capitalism
 
-Their main goals focus on **social, economic, and academic freedom**, and respecting private property. I joined SFL at the end of 2023, and since the start of 2025, I've been a local coordinator.
-
-### 📸 Photography
-
-One of my hobbies is photography, even though I'm not exactly a pro. You can check out my photos here!
+I joined SFL in late 2023 and have been a **Local Coordinator** since early 2025.
 
 ---
 
-## Contact & Social Media
+### 📸 **Photography**
 
-<!-- tabs:start -->
-
-#### **Professional**
-
-- 📧 **Email:** [samuel.paluba@icloud.com](mailto:samuel.paluba@icloud.com)
-- 💼 **LinkedIn:** [Connect with me](https://linkedin.com/in/samuelpaluba)
-- 🐙 **GitHub:** [SamuelPalubaCZ](https://github.com/SamuelPalubaCZ)
-
-#### **Social**
-
-- 📷 **Instagram:** [@samuelpaluba](https://instagram.com/samuelpaluba)
-- 📱 **WhatsApp:** [Message me](https://wa.me/your-number)
-- 🔒 **Signal:** [Secure messaging](https://signal.me/#p/your-signal)
-
-<!-- tabs:end -->
+One of my hobbies is photography. While not a pro, I love capturing moments. **[Check out my photos here!](#)** *(Insert link to portfolio)*
 
 ---
 
-> 💡 **Note:** This website is constantly evolving. If you spot any errors or have suggestions, feel free to reach out.
+## 🤝 Connect with Me
 
-## Quick Links
+[![Discord](https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.com/invite/your-link)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/samuelpaluba)
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/SamuelPalubaCZ)
+[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:samuel@paluba.me)
+[![Signal](https://img.shields.io/badge/Signal-3A76F0?style=for-the-badge&logo=signal&logoColor=white)](#)
+[![WhatsApp](https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](#)
 
-- [🌐 LibertyLoft](https://LibertyLoft.cz)
-- [📊 Students for Liberty](https://studentsforliberty.org)
-- [📷 My Photography Portfolio](#photography)
-- [📧 Contact Me](mailto:samuel.paluba@icloud.com)
+---
 
+© 2025 **Samuel Paluba**
