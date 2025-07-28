@@ -1,4 +1,4 @@
-# Samuel Paluba
+Samuel Paluba
 
 💻 **IT** • 🏛 **Politics** • 🔗 **Decentralization** • 📷 **Photography** • 📈 **Economics**
 
@@ -13,7 +13,6 @@ I’m deeply passionate about technology, individual freedom, and the potential 
 ---
 
 ## 🚀 Projects
----
 
 ### 🗽 **[LibertyLoft](https://LibertyLoft.cz)**
 
@@ -66,5 +65,4 @@ One of my hobbies is photography. While not a pro, I love capturing moments. **[
 [![WhatsApp](https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](#)
 
 ---
-
 © 2025 **Samuel Paluba**
