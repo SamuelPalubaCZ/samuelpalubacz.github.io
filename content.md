@@ -1,182 +1,58 @@
-# Samuel Paluba Portfolio - Content Management
+# Samuel Paluba
 
-## 🔧 Site Configuration
-```yaml
-site_title: "Samuel Paluba - IT Freelancer & Crypto-Anarchist"
-name: "👨‍💻 Samuel Paluba"
-```
-
-## 🏠 Hero Section
-```yaml
-hero_greeting: "👋 Hey there, I'm Samuel!"
-hero_intro: "I'm a 16 y.o freelancer in the IT field, a libertarian/crypto-anarchist, and I'm currently working on a project called LibertyLoft. I also serve as a Local Coordinator for Students for Liberty."
-cta_button: "📄 See My Resume"
-cta_target: "#projects"
-```
-
-## 📄 Resume Section
-```yaml
-section_title: "📄 Resume"
-```
-
-### Resume Items
-```yaml
-resume_items:
-  - id: "libertyloft"
-    title: "🏛️ LibertyLoft"
-    description: "A community center in Prague focused on libertarian principles and crypto-anarchist ideals. Building a space for free thinkers and decentralization advocates."
-    type: "project"
-    status: "active"
-    status_text: "Visit Project"
-    link: "https://LibertyLoft.cz"
-    visible: true
-    
-  - id: "thinkhome"
-    title: "💻 Thinkhome IT"
-    description: "IT company project currently on hold. Focused on innovative tech solutions and decentralized services. Planning to resume development in the future."
-    type: "project"
-    status: "paused"
-    status_text: "⏸️ Currently on Hold"
-    link: ""
-    visible: true
-    
-  - id: "sfl"
-    title: "🗽 Students for Liberty"
-    description: "Serving as Local Coordinator, organizing events and building community around libertarian principles. Connecting like-minded students and promoting freedom of thought."
-    type: "role"
-    status: "active"
-    status_text: "✅ Active Role"
-    link: ""
-    visible: true
-    
-  - id: "photography"
-    title: "📸 Photography Portfolio"
-    description: "Personal hobby exploring visual storytelling through photography. Capturing moments and perspectives that align with my worldview and aesthetic preferences."
-    type: "hobby"
-    status: "ongoing"
-    status_text: "🎨 Personal Hobby"
-    link: ""
-    visible: true
-```
-
-## 🧑‍🎓 About Section
-```yaml
-section_title: "🧑‍🎓 About Me"
-show_personal_header: false
-personal_content: |
-  At 16, I'm deeply passionate about technology, individual freedom, and the potential of decentralized systems. My work spans IT development, community organizing, and exploring the intersection of technology and liberty.
-  
-  When I'm not coding or organizing events, you'll find me behind a camera, capturing the world through my libertarian lens, or diving deep into cryptocurrency and blockchain technologies.
-```
-
-## 📧 Contact Section
-```yaml
-section_title: "📧 Get In Touch"
-```
-
-### Contact Methods
-```yaml
-contact_methods:
-  - id: "email"
-    title: "📧 Email"
-    description: "Professional inquiries"
-    link: "mailto:samuel@paluba.me"
-    visible: true
-    
-  - id: "signal"
-    title: "🔐 Signal"
-    description: "Secure messaging"
-    link: "https://signal.me/#p/+420795495137"
-    visible: true
-    
-  - id: "whatsapp"
-    title: "💬 WhatsApp"
-    description: "Quick communication"
-    link: "https://wa.me/+420728981602"
-    visible: true
-```
-
-### Social Media
-```yaml
-social_links:
-  - id: "github"
-    platform: "GitHub"
-    url: "#"
-    visible: true
-    
-  - id: "linkedin"
-    platform: "LinkedIn"
-    url: "#"
-    visible: true
-    
-  - id: "instagram"
-    platform: "Instagram"
-    url: "#"
-    visible: true
-    
-  - id: "email"
-    platform: "Email"
-    url: "#"
-    visible: true
-```
-
-## 🦶 Footer
-```yaml
-footer_text: "© 2025 Samuel Paluba. 🚀 Built with passion for freedom and technology."
-```
-
-## 🧭 Navigation
-```yaml
-navigation:
-  - id: "home"
-    title: "🏠 Home"
-    target: "#home"
-    visible: true
-    
-  - id: "resume"
-    title: "📄 Resume"
-    target: "#projects"
-    visible: true
-    
-  - id: "about"
-    title: "🧑‍🎓 About"
-    target: "#about"
-    visible: true
-    
-  - id: "contact"
-    title: "📧 Contact"
-    target: "#contact"
-    visible: true
-```
+**IT, politics, decentralization, photography, and economics.**
 
 ---
 
-## 📝 Content Management Instructions
+## 👋 Introduction
 
-### How to Edit Content:
-1. **Text Content**: Edit YAML values directly
-2. **Visibility**: Set `visible: true/false` for any item
-3. **Links**: Update URL fields with actual links
-4. **Order**: Rearrange items in arrays to change display order
-5. **Status**: Change status types (active, paused, ongoing, etc.)
+Hey there, I'm Samuel!  
+I'm a 16 y.o freelancer in the IT field, a libertarian/crypto-anarchist, and I'm currently working on a project called LibertyLoft. I also serve as a Local Coordinator for Students for Liberty.
 
-### Supported Status Types:
-- `active`: Green indicator with checkmark
-- `paused`: Gray indicator with pause icon
-- `ongoing`: Blue indicator with continuous icon
-- `completed`: Green indicator with checkmark
+---
 
-### Adding New Resume Items:
-```yaml
-- id: "unique_id"
-  title: "🆕 Project Title"
-  description: "Project description here..."
-  type: "project|role|hobby"
-  status: "active|paused|ongoing|completed"
-  status_text: "Display text for status"
-  link: "https://example.com"
-  visible: true
-```
+## 💡 My Beliefs
 
-### Live Preview:
-After editing this file, the changes will be automatically reflected on the website through the CMS system.
+I'm deeply passionate about technology, individual freedom, and the potential of decentralized systems. My work spans IT development, community organizing, and exploring the intersection of technology and liberty.
+
+When I'm not coding or organizing events, you'll find me behind a camera, capturing the world through my libertarian lens, or diving deep into cryptocurrency and blockchain technologies.
+
+---
+
+## 🚀 Projects
+
+### 1. [LibertyLoft](https://LibertyLoft.cz)
+
+LibertyLoft is a new community center in Prague dedicated to bringing together the libertarian, anarcho-capitalist, and freedom-oriented community.  
+Our mission is to create a vibrant space for organizing events, discussions, and sharing knowledge and friendship.  
+It’s open to anyone interested in freedom, collaboration, and new ideas.
+
+---
+
+### 2. Thinkhome
+
+Thinkhome was my company with a few of my partners. Our goal was to make technology accessible for everyone.  
+We also offered hosting, website creation, consulting, and personalized IT management services.  
+Unfortunately, the project is on hold right now, but I’m still doing the same things, just on a smaller scale, under my own name.  
+**Feel free to reach out if you need anything!**
+
+---
+
+### 3. Students for Liberty
+
+Students for Liberty is a student organization that’s all about spreading ideas through events and activities.  
+They’re like a group of freedom fighters who connect people who share their values.
+
+They’re pretty close to classical liberalism, libertarianism, and anarcho-capitalism, so their main goals are social, economic, and academic freedom, and respecting private property.  
+I joined SFL at the end of 2023, and since the start of 2025, I’ve been a local coordinator.
+
+---
+
+### 4. Photography
+
+One of my hobbies is photography, even though I’m not exactly a pro.  
+You can check out my photos here!
+
+---
+
+*© 2025 Samuel Paluba*
