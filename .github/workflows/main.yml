@@ -2,7 +2,7 @@ name: Xlog
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "main" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -43,15 +43,15 @@ jobs:
           --sitename="Samuel Paluba" \
           --theme="light" \
           --codestyle="catppuccin-latte" \
-          --index=Home \
+          --index=index \
           --sitemap.domain=samuel.paluba.me \
           --og.domain=samuel.paluba.me \
           --twitter.username=@PalubaSamuel \
           --github.url=https://github.com/SamuelPalubaCZ/samuelpalubacz.github.io/edit/master \
           --rss.domain=samuel.paluba.me \
           --rss.description="Samuel Paluba"
-          rm *.md
-          chmod -R 0777 .
+          #rm *.md
+          #chmod -R 0777 .
 
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v3.0.1
