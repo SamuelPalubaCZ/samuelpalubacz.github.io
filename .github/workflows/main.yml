@@ -55,6 +55,7 @@ jobs:
             --activitypub.username="samuel" \
             --activitypub.summary="16 y.o libertarian/crypto-anarchist" \
             --html \
+            --custom.head=header.html \
             --pandoc 
 
             rm *.md
