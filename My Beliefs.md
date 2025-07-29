@@ -1,7 +1,5 @@
-```hero
-title: 🌟 My Beliefs
-subtitle: I'm deeply passionate about individual freedom, decentralization, and the power of voluntary collaboration. Here are some core principles I stand by:
-```
+#🌟 My Beliefs
+##I'm deeply passionate about individual freedom, decentralization, and the power of voluntary collaboration. Here are some core principles I stand by:
 
 # 🗽 Libertarianism
 I believe in individual liberty, personal responsibility, and minimal state intervention. Freedom empowers us to achieve our greatest potential when we are free to make our own choices.

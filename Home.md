@@ -1,12 +1,11 @@
----
-title: Samuel Paluba
----
-
-# 🤑 About Me
-
-👋 Hey there, I’m **Samuel Paluba** — a 16 y.o freelancer in the IT field, a libertarian/crypto-anarchist, and currently working on an exciting project called **LibertyLoft**. I also serve as a **Local Coordinator** for *Students for Liberty*.
+```hero
+image: Samuel Paluba
+title: 👋 Hey there, I’m **Samuel Paluba** — a 16 y.o freelancer in the IT field, a libertarian/crypto-anarchist, and currently working on an exciting project called **LibertyLoft**. I also serve as a **Local Coordinator** for *Students for Liberty*.
 
 I’m deeply passionate about technology, individual freedom, and the potential of decentralized systems. My work spans IT development, community organizing, and exploring the intersection of technology and liberty. When I’m not coding or organizing events, you’ll find me behind a camera.
+```
+
+
 
 ---
 💻 **IT** • 🏛 **Politics** • 🔗 **Decentralization** • 📷 **Photography** • 📈 **Economics**

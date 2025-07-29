@@ -1,7 +1,6 @@
-```hero
-title: 📞 Contact
-subtitle: Feel free to connect with me on any of my socials or drop me a message directly!
-```
+#📞 Contact
+## Feel free to connect with me on any of my socials or drop me a message directly!
+
 
 - 🌐 [LinkedIn](https://www.linkedin.com/in/samuelpaluba)
 - 📸 [Instagram](https://instagram.com/user0906294455)
